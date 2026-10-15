@@ -1,0 +1,88 @@
+import { useState, useEffect } from 'react';
+import { CATEGORIES } from '../constants';
+import { ChevronDownIcon } from './Icons';
+
+export default function PromptForm({ initial, onSave, onCancel }) {
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    if (initial) {
+      setTitle(initial.title);
+      setCategory(initial.category);
+      setText(initial.text);
+    } else {
+      setTitle('');
+      setCategory('');
+      setText('');
+    }
+  }, [initial]);
+
+  const handleSubmit = () => {
+    if (!title.trim() || !category || !text.trim()) return;
+    onSave({ title: title.trim(), category, text: text.trim() });
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div>
+        <label className="block text-[13px] font-semibold text-warm-600 dark:text-dark-300 mb-1.5">
+          Título
+        </label>
+        <input
+          type="text"
+          placeholder="Ej: Analizar código Python"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          className="w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none focus:border-lavender transition-colors"
+        />
+      </div>
+      <div>
+        <label className="block text-[13px] font-semibold text-warm-600 dark:text-dark-300 mb-1.5">
+          Categoría
+        </label>
+        <div className="relative">
+          <select
+            value={category}
+            onChange={e => setCategory(e.target.value)}
+            className="w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-sm text-warm-800 dark:text-dark-100 outline-none appearance-none cursor-pointer focus:border-lavender transition-colors"
+          >
+            <option value="">Seleccionar categoría...</option>
+            {CATEGORIES.map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+          <ChevronDownIcon className="w-3.5 h-3.5 absolute right-3.5 top-1/2 -translate-y-1/2 text-warm-400 dark:text-dark-400 pointer-events-none" />
+        </div>
+      </div>
+      <div>
+        <label className="block text-[13px] font-semibold text-warm-600 dark:text-dark-300 mb-1.5">
+          Prompt
+        </label>
+        <textarea
+          placeholder="Pega o escribe tu prompt aquí..."
+          value={text}
+          onChange={e => setText(e.target.value)}
+          rows={7}
+          className="w-full py-3 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 font-mono text-[13px] text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none resize-y leading-relaxed focus:border-lavender transition-colors"
+        />
+      </div>
+      <div className="flex justify-end gap-2.5 mt-2">
+        <button
+          onClick={onCancel}
+          className="px-5 py-2.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-white dark:bg-dark-700 text-warm-500 dark:text-dark-200 text-sm font-medium hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={handleSubmit}
+          disabled={!title.trim() || !category || !text.trim()}
+          className="px-6 py-2.5 rounded-[10px] bg-lavender text-warm-800 dark:text-dark-900 text-sm font-semibold hover:brightness-95 transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+        >
+          Guardar
+        </button>
+      </div>
+    </div>
+  );
+}

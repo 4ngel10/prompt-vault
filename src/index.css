@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+
+  --color-warm-50: #FAFAF8;
+  --color-warm-100: #F5F4F0;
+  --color-warm-200: #ECEAE5;
+  --color-warm-400: #9B9690;
+  --color-warm-500: #6B6560;
+  --color-warm-600: #5A5550;
+  --color-warm-700: #3A3835;
+  --color-warm-800: #2D2D2D;
+
+  --color-dark-900: #1A1A2E;
+  --color-dark-800: #1E1E34;
+  --color-dark-700: #252540;
+  --color-dark-600: #2E2E48;
+  --color-dark-500: #3A3A58;
+  --color-dark-400: #7A7890;
+  --color-dark-300: #9A98AE;
+  --color-dark-200: #B0ACA6;
+  --color-dark-100: #E8E8E8;
+
+  --color-lavender: #C3B1E1;
+  --color-rose: #F2C4CE;
+  --color-mint: #A8D5BA;
+  --color-sky: #A7C7E7;
+  --color-peach: #FADADD;
+  --color-cream: #F9E4B7;
+  --color-danger: #D94444;
+}
+
+@layer base {
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@keyframes animate-in {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.animate-in {
+  animation: animate-in 0.2s ease-out;
+}
