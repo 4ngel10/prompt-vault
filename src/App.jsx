@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useTheme } from './hooks/useTheme';
-import { SAMPLE_PROMPTS } from './constants';
+import { SAMPLE_PROMPTS, CATEGORIES } from './constants';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import CategoryChips from './components/CategoryChips';
@@ -11,10 +11,12 @@ import Modal from './components/Modal';
 import PromptForm from './components/PromptForm';
 import PromptDetail from './components/PromptDetail';
 import DeleteConfirm from './components/DeleteConfirm';
+import CategoryManager from './components/CategoryManager';
 
 function App() {
   const [dark, toggleTheme] = useTheme();
   const [prompts, setPrompts] = useLocalStorage('pv-prompts', SAMPLE_PROMPTS);
+  const [categories, setCategories] = useLocalStorage('pv-categories', CATEGORIES);
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('Todos');
 
@@ -23,6 +25,7 @@ function App() {
   const [editingPrompt, setEditingPrompt] = useState(null);
   const [viewingPrompt, setViewingPrompt] = useState(null);
   const [deletingPrompt, setDeletingPrompt] = useState(null);
+  const [managingCategories, setManagingCategories] = useState(false);
 
   const filtered = useMemo(() => {
     return prompts.filter(p => {
@@ -50,13 +53,28 @@ function App() {
     setViewingPrompt(null);
   };
 
+  const handleAddCategory = (name) => {
+    setCategories(prev => [...prev, name]);
+  };
+
+  const handleDeleteCategory = (name) => {
+    setCategories(prev => prev.filter(c => c !== name));
+    setPrompts(prev => prev.map(p => p.category === name ? { ...p, category: '' } : p));
+    if (activeCategory === name) setActiveCategory('Todos');
+  };
+
   return (
     <div className="min-h-screen bg-warm-50 dark:bg-dark-900 text-warm-800 dark:text-dark-100 transition-colors">
       <Header dark={dark} onToggleTheme={toggleTheme} onNewPrompt={() => setCreateOpen(true)} />
 
-      <div className="max-w-[1160px] mx-auto px-6 sm:px-10 py-7">
+      <div className="max-w-[1160px] mx-auto px-4 sm:px-10 pt-5 sm:pt-7 pb-[max(1.75rem,env(safe-area-inset-bottom))]">
         <SearchBar value={search} onChange={setSearch} />
-        <CategoryChips active={activeCategory} onSelect={setActiveCategory} />
+        <CategoryChips
+          categories={categories}
+          active={activeCategory}
+          onSelect={setActiveCategory}
+          onManage={() => setManagingCategories(true)}
+        />
 
         {prompts.length === 0 ? (
           <EmptyState onNewPrompt={() => setCreateOpen(true)} />
@@ -67,7 +85,7 @@ function App() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {filtered.map(p => (
               <PromptCard
                 key={p.id}
@@ -84,12 +102,12 @@ function App() {
 
       {/* Create modal */}
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Nuevo Prompt">
-        <PromptForm onSave={handleCreate} onCancel={() => setCreateOpen(false)} />
+        <PromptForm categories={categories} onSave={handleCreate} onCancel={() => setCreateOpen(false)} />
       </Modal>
 
       {/* Edit modal */}
       <Modal open={!!editingPrompt} onClose={() => setEditingPrompt(null)} title="Editar Prompt">
-        <PromptForm initial={editingPrompt} onSave={handleEdit} onCancel={() => setEditingPrompt(null)} />
+        <PromptForm categories={categories} initial={editingPrompt} onSave={handleEdit} onCancel={() => setEditingPrompt(null)} />
       </Modal>
 
       {/* Detail view */}
@@ -106,6 +124,16 @@ function App() {
         open={!!deletingPrompt}
         onClose={() => setDeletingPrompt(null)}
         onConfirm={handleDelete}
+      />
+
+      {/* Category manager */}
+      <CategoryManager
+        open={managingCategories}
+        onClose={() => setManagingCategories(false)}
+        categories={categories}
+        prompts={prompts}
+        onAdd={handleAddCategory}
+        onDelete={handleDeleteCategory}
       />
     </div>
   );

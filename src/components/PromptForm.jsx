@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { CATEGORIES } from '../constants';
 import { ChevronDownIcon } from './Icons';
 
-export default function PromptForm({ initial, onSave, onCancel }) {
+export default function PromptForm({ categories, initial, onSave, onCancel }) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [text, setText] = useState('');
@@ -35,7 +34,7 @@ export default function PromptForm({ initial, onSave, onCancel }) {
           placeholder="Ej: Analizar código Python"
           value={title}
           onChange={e => setTitle(e.target.value)}
-          className="w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none focus:border-lavender transition-colors"
+          className="w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none focus:border-lavender transition-colors"
         />
       </div>
       <div>
@@ -46,10 +45,10 @@ export default function PromptForm({ initial, onSave, onCancel }) {
           <select
             value={category}
             onChange={e => setCategory(e.target.value)}
-            className="w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-sm text-warm-800 dark:text-dark-100 outline-none appearance-none cursor-pointer focus:border-lavender transition-colors"
+            className="w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 outline-none appearance-none cursor-pointer focus:border-lavender transition-colors"
           >
             <option value="">Seleccionar categoría...</option>
-            {CATEGORIES.map(c => (
+            {categories.map(c => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
@@ -65,10 +64,10 @@ export default function PromptForm({ initial, onSave, onCancel }) {
           value={text}
           onChange={e => setText(e.target.value)}
           rows={7}
-          className="w-full py-3 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 font-mono text-[13px] text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none resize-y leading-relaxed focus:border-lavender transition-colors"
+          className="w-full py-3 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 font-mono text-base sm:text-[13px] text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none resize-y leading-relaxed focus:border-lavender transition-colors"
         />
       </div>
-      <div className="flex justify-end gap-2.5 mt-2">
+      <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2.5 mt-2">
         <button
           onClick={onCancel}
           className="px-5 py-2.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-white dark:bg-dark-700 text-warm-500 dark:text-dark-200 text-sm font-medium hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer"

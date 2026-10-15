@@ -6,6 +6,7 @@ export function useTheme() {
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#1E1E34' : '#FFFFFF');
   }, [dark]);
 
   return [dark, () => setDark(d => !d)];

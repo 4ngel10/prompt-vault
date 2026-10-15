@@ -14,6 +14,22 @@ export const CATEGORY_COLORS = {
   Productividad: { light: { bg: '#F9EDCF', text: '#6E5520' }, dark: { bg: 'rgba(249,228,183,0.18)', text: '#F9E4B7' } },
 };
 
+// Colores para categorías creadas por el usuario
+const CATEGORY_PALETTE = [
+  { light: { bg: '#E9E1F5', text: '#5B4682' }, dark: { bg: 'rgba(195,177,225,0.18)', text: '#C3B1E1' } },
+  ...Object.values(CATEGORY_COLORS),
+];
+
+const UNCATEGORIZED_COLORS = { light: { bg: '#ECEAE5', text: '#6B6560' }, dark: { bg: 'rgba(176,172,166,0.15)', text: '#B0ACA6' } };
+
+export function getCategoryColors(name) {
+  if (!name) return UNCATEGORIZED_COLORS;
+  if (CATEGORY_COLORS[name]) return CATEGORY_COLORS[name];
+  let hash = 0;
+  for (const ch of name) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+  return CATEGORY_PALETTE[hash % CATEGORY_PALETTE.length];
+}
+
 export const SAMPLE_PROMPTS = [
   { id: '1', title: 'Analizar código Python', text: 'Analiza el siguiente código Python. Identifica errores, sugiere mejoras de rendimiento y buenas prácticas. Explica cada sugerencia con ejemplos claros.\n\nEstructura tu respuesta así:\n1. Errores encontrados\n2. Mejoras de rendimiento\n3. Buenas prácticas sugeridas\n4. Código refactorizado', category: 'Código' },
   { id: '2', title: 'Email de seguimiento', text: 'Redacta un email de seguimiento profesional para un cliente potencial. El tono debe ser cordial pero directo, recordando nuestra última conversación y proponiendo próximos pasos concretos.', category: 'Escritura' },

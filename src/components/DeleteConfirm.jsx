@@ -4,7 +4,7 @@ import Modal from './Modal';
 export default function DeleteConfirm({ open, onClose, onConfirm }) {
   return (
     <Modal open={open} onClose={onClose} title="" width="max-w-sm">
-      <div className="-mt-6 text-center">
+      <div className="-mt-6 text-center sm:pt-0 pt-2">
         <div className="w-11 h-11 rounded-full bg-red-50 dark:bg-red-950/30 flex items-center justify-center mx-auto mb-4">
           <TrashIcon className="w-5 h-5 text-danger" />
         </div>
