@@ -27,3 +27,6 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Credenciales OAuth de Google
+client_secret_*.json
