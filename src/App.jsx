@@ -16,6 +16,8 @@ import PromptForm from './components/PromptForm';
 import PromptDetail from './components/PromptDetail';
 import DeleteConfirm from './components/DeleteConfirm';
 import CategoryManager from './components/CategoryManager';
+import CategoryColorsModal from './components/CategoryColorsModal';
+import { CategoryColorsProvider } from './contexts/CategoryColorsContext';
 import { CloseIcon } from './components/Icons';
 
 function App() {
@@ -23,7 +25,11 @@ function App() {
   const { user } = useAuth();
 
   if (!user) return <AuthScreen dark={dark} onToggleTheme={toggleTheme} />;
-  return <Vault key={user.id} user={user} dark={dark} toggleTheme={toggleTheme} />;
+  return (
+    <CategoryColorsProvider key={user.id} user={user}>
+      <Vault user={user} dark={dark} toggleTheme={toggleTheme} />
+    </CategoryColorsProvider>
+  );
 }
 
 function Vault({ user, dark, toggleTheme }) {
@@ -41,6 +47,7 @@ function Vault({ user, dark, toggleTheme }) {
   const [viewingPrompt, setViewingPrompt] = useState(null);
   const [deletingPrompt, setDeletingPrompt] = useState(null);
   const [managingCategories, setManagingCategories] = useState(false);
+  const [customizingColors, setCustomizingColors] = useState(false);
 
   const ownPrompts = useMemo(() => prompts.filter(p => p.isOwn), [prompts]);
 
@@ -122,6 +129,7 @@ function Vault({ user, dark, toggleTheme }) {
         onToggleTheme={toggleTheme}
         onNew={openCreate}
         onHome={goHome}
+        onOpenSettings={() => setCustomizingColors(true)}
         user={user}
         onSignOut={handleSignOut}
       />
@@ -132,6 +140,7 @@ function Vault({ user, dark, toggleTheme }) {
         <CategoryChips
           categories={categories}
           active={activeCategory}
+          dark={dark}
           onSelect={setActiveCategory}
           onManage={() => setManagingCategories(true)}
         />
@@ -178,12 +187,12 @@ function Vault({ user, dark, toggleTheme }) {
 
       {/* Create modal */}
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title={ITEM_TYPES[formType].newTitle}>
-        <PromptForm categories={categories} type={formType} onTypeChange={setFormType} onSave={handleCreate} onCancel={() => setCreateOpen(false)} />
+        <PromptForm categories={categories} dark={dark} type={formType} onTypeChange={setFormType} onSave={handleCreate} onCancel={() => setCreateOpen(false)} />
       </Modal>
 
       {/* Edit modal */}
       <Modal open={!!editingPrompt} onClose={() => setEditingPrompt(null)} title={ITEM_TYPES[formType].editTitle}>
-        <PromptForm categories={categories} initial={editingPrompt} type={formType} onTypeChange={setFormType} onSave={handleEdit} onCancel={() => setEditingPrompt(null)} />
+        <PromptForm categories={categories} dark={dark} initial={editingPrompt} type={formType} onTypeChange={setFormType} onSave={handleEdit} onCancel={() => setEditingPrompt(null)} />
       </Modal>
 
       {/* Detail view */}
@@ -211,6 +220,14 @@ function Vault({ user, dark, toggleTheme }) {
         prompts={ownPrompts}
         onAdd={handleAddCategory}
         onDelete={handleDeleteCategory}
+      />
+
+      {/* Category colors */}
+      <CategoryColorsModal
+        open={customizingColors}
+        onClose={() => setCustomizingColors(false)}
+        categories={categories}
+        dark={dark}
       />
     </div>
   );

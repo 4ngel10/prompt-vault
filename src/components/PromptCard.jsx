@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { DotsIcon, EditIcon, TrashIcon, ShareIcon, CopyIcon, CheckIcon } from './Icons';
-import { getCategoryColors, getItemType } from '../constants';
+import { getItemType } from '../constants';
+import { useCategoryColors } from '../contexts/CategoryColorsContext';
 import TypeBadge from './TypeBadge';
 import SharedBadge from './SharedBadge';
 
@@ -9,6 +10,7 @@ const menuItemClass = 'w-full flex items-center gap-2 px-3.5 py-2.5 sm:py-2 text
 export default function PromptCard({ prompt, dark, onEdit, onDelete, onToggleShare, onClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { getColors } = useCategoryColors();
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function PromptCard({ prompt, dark, onEdit, onDelete, onToggleSha
 
   const act = (fn) => (e) => { e.stopPropagation(); setMenuOpen(false); fn(); };
 
-  const colors = getCategoryColors(prompt.category);
+  const colors = getColors(prompt.category);
   const scheme = dark ? colors.dark : colors.light;
 
   return (

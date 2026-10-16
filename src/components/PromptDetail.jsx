@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { getCategoryColors, getItemType } from '../constants';
+import { getItemType } from '../constants';
+import { useCategoryColors } from '../contexts/CategoryColorsContext';
 import TypeBadge from './TypeBadge';
 import SharedBadge from './SharedBadge';
 import { CopyIcon, EditIcon, TrashIcon, CheckIcon } from './Icons';
@@ -7,10 +8,11 @@ import Modal from './Modal';
 
 export default function PromptDetail({ prompt, dark, onClose, onEdit, onDelete }) {
   const [copied, setCopied] = useState(false);
+  const { getColors } = useCategoryColors();
 
   if (!prompt) return null;
 
-  const colors = getCategoryColors(prompt.category);
+  const colors = getColors(prompt.category);
   const scheme = dark ? colors.dark : colors.light;
 
   const handleCopy = async () => {

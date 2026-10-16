@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronDownIcon, BoltIcon } from './Icons';
 import { ITEM_TYPES } from '../constants';
+import { useCategoryColors } from '../contexts/CategoryColorsContext';
 import SegmentedControl from './SegmentedControl';
 
 const TYPE_OPTIONS = [
@@ -13,10 +14,16 @@ const TEXT_PLACEHOLDERS = {
   skill: 'Describe tu skill aquí...',
 };
 
-export default function PromptForm({ categories, initial, type, onTypeChange, onSave, onCancel }) {
+// Las opciones del desplegable mantienen colores neutros aunque el select esté tintado
+const OPTION_CLASS = 'bg-white text-warm-800 dark:bg-dark-700 dark:text-dark-100';
+
+export default function PromptForm({ categories, initial, type, dark, onTypeChange, onSave, onCancel }) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [text, setText] = useState('');
+  const { getColors } = useCategoryColors();
+  const categoryColors = category ? getColors(category) : null;
+  const scheme = categoryColors ? (dark ? categoryColors.dark : categoryColors.light) : null;
 
   useEffect(() => {
     if (initial) {
@@ -66,17 +73,31 @@ export default function PromptForm({ categories, initial, type, onTypeChange, on
           Categoría
         </label>
         <div className="relative">
+          {/* El select nativo no permite colorear opciones: el campo adopta el color de la categoría elegida */}
+          {scheme && (
+            <span
+              aria-hidden="true"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full pointer-events-none"
+              style={{ background: categoryColors.swatch }}
+            />
+          )}
           <select
             value={category}
             onChange={e => setCategory(e.target.value)}
-            className="w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 outline-none appearance-none cursor-pointer focus:border-lavender transition-colors"
+            style={scheme ? { background: scheme.bg, color: scheme.text, borderColor: scheme.border } : undefined}
+            className={`w-full py-2.5 pr-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 outline-none appearance-none cursor-pointer focus:border-lavender transition-colors ${scheme ? 'pl-8 font-medium' : 'pl-3.5'}`}
           >
-            <option value="">Seleccionar categoría...</option>
+            <option value="" className={OPTION_CLASS}>Seleccionar categoría...</option>
             {categories.map(c => (
-              <option key={c} value={c}>{c}</option>
+              <option key={c} value={c} className={OPTION_CLASS}>{c}</option>
             ))}
           </select>
-          <ChevronDownIcon className="w-3.5 h-3.5 absolute right-3.5 top-1/2 -translate-y-1/2 text-warm-400 dark:text-dark-400 pointer-events-none" />
+          <span
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 flex text-warm-400 dark:text-dark-400 pointer-events-none"
+            style={scheme ? { color: scheme.text } : undefined}
+          >
+            <ChevronDownIcon className="w-3.5 h-3.5" />
+          </span>
         </div>
       </div>
       <div>

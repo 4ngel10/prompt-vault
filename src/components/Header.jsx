@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { LockIcon, SunIcon, MoonIcon, PlusIcon, ChevronDownIcon, BoltIcon, LogoutIcon, GoogleIcon } from './Icons';
+import { LockIcon, SunIcon, MoonIcon, PlusIcon, ChevronDownIcon, BoltIcon, LogoutIcon, GoogleIcon, GearIcon } from './Icons';
 
 // Cierra un menú al hacer clic fuera o pulsar Escape
 function useDismiss(ref, open, close) {
@@ -47,7 +47,7 @@ function Avatar({ url, email }) {
 const menuPanelClass = 'absolute right-0 top-[46px] bg-white dark:bg-dark-700 border border-warm-200 dark:border-dark-500 rounded-xl shadow-lg py-1.5 z-30 animate-in';
 const menuItemClass = 'w-full flex items-center gap-2.5 px-3.5 py-2.5 sm:py-2 text-[13px] text-warm-600 dark:text-dark-200 hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer';
 
-export default function Header({ dark, onToggleTheme, onNew, onHome, user, onSignOut }) {
+export default function Header({ dark, onToggleTheme, onNew, onHome, onOpenSettings, user, onSignOut }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const menuRef = useRef(null);
@@ -87,6 +87,14 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, user, onSig
           aria-label={dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
         >
           {dark ? <MoonIcon /> : <SunIcon />}
+        </button>
+        <button
+          onClick={onOpenSettings}
+          title="Personalizar colores"
+          className="hidden sm:flex w-[38px] h-[38px] rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 items-center justify-center text-warm-600 dark:text-dark-200 hover:bg-warm-100 dark:hover:bg-dark-600 transition-colors cursor-pointer"
+          aria-label="Personalizar colores"
+        >
+          <GearIcon />
         </button>
 
         <div className="relative" ref={menuRef}>
@@ -140,6 +148,14 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, user, onSig
                 </span>
               </div>
               <div className="border-t border-warm-200 dark:border-dark-500 my-1" />
+              <button
+                role="menuitem"
+                onClick={() => { setAccountOpen(false); onOpenSettings(); }}
+                className={menuItemClass}
+              >
+                <GearIcon className="w-[15px] h-[15px]" />
+                Personalizar colores
+              </button>
               <button
                 role="menuitem"
                 onClick={() => { setAccountOpen(false); onSignOut(); }}

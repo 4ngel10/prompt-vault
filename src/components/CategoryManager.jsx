@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { PlusIcon, TrashIcon } from './Icons';
 import Modal from './Modal';
+import { useCategoryColors } from '../contexts/CategoryColorsContext';
 
 export default function CategoryManager({ open, onClose, categories, prompts, onAdd, onDelete }) {
   const [name, setName] = useState('');
   const [confirming, setConfirming] = useState(null);
+  const { getColors } = useCategoryColors();
 
   const trimmed = name.trim();
   const exists = categories.some(c => c.toLowerCase() === trimmed.toLowerCase()) || trimmed.toLowerCase() === 'todos';
@@ -80,9 +82,10 @@ export default function CategoryManager({ open, onClose, categories, prompts, on
                 </>
               ) : (
                 <>
-                  <span className="text-sm text-warm-800 dark:text-dark-100 truncate">
-                    {cat}
-                    <span className="ml-2 text-[12px] text-warm-400 dark:text-dark-400">{count}</span>
+                  <span className="flex items-center gap-2.5 min-w-0 text-sm text-warm-800 dark:text-dark-100">
+                    <span aria-hidden="true" className="w-2.5 h-2.5 shrink-0 rounded-full" style={{ background: getColors(cat).swatch }} />
+                    <span className="truncate">{cat}</span>
+                    <span className="shrink-0 text-[12px] text-warm-400 dark:text-dark-400">{count}</span>
                   </span>
                   <button
                     onClick={() => setConfirming(cat)}

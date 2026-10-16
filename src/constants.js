@@ -6,28 +6,63 @@ export const CATEGORIES = [
   'Imagen',
 ];
 
-export const CATEGORY_COLORS = {
-  Código:        { light: { bg: '#DBE9F6', text: '#3A5F82' }, dark: { bg: 'rgba(167,199,231,0.18)', text: '#A7C7E7' } },
-  Escritura:     { light: { bg: '#F6DEE4', text: '#7A3B4E' }, dark: { bg: 'rgba(242,196,206,0.18)', text: '#F2C4CE' } },
-  Marketing:     { light: { bg: '#D4ECDF', text: '#2E6644' }, dark: { bg: 'rgba(168,213,186,0.18)', text: '#A8D5BA' } },
-  Imagen:        { light: { bg: '#FCEAEC', text: '#8A4050' }, dark: { bg: 'rgba(250,218,221,0.18)', text: '#FADADD' } },
-  Productividad: { light: { bg: '#F9EDCF', text: '#6E5520' }, dark: { bg: 'rgba(249,228,183,0.18)', text: '#F9E4B7' } },
+// Paleta pastel para categorías. `swatch` es el color puro (círculos del selector y bordes);
+// light/dark son los pares fondo/texto de badges y chips, todos con contraste AA (≥ 4.5:1).
+function tint(swatch, lightBg, lightText) {
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(swatch.slice(i, i + 2), 16));
+  return {
+    swatch,
+    light: { bg: lightBg, text: lightText, border: swatch },
+    dark: { bg: `rgba(${r},${g},${b},0.18)`, text: swatch, border: `rgba(${r},${g},${b},0.55)` },
+  };
+}
+
+export const COLOR_PALETTE = {
+  lavender: { label: 'Lavanda',   ...tint('#C3B1E1', '#E9E1F5', '#5B4682') },
+  rose:     { label: 'Rosa',      ...tint('#F2C4CE', '#F6DEE4', '#7A3B4E') },
+  mint:     { label: 'Menta',     ...tint('#A8D5BA', '#D4ECDF', '#2E6644') },
+  sky:      { label: 'Cielo',     ...tint('#A7C7E7', '#DBE9F6', '#3A5F82') },
+  peach:    { label: 'Melocotón', ...tint('#FADADD', '#FCEAEC', '#8A4050') },
+  cream:    { label: 'Crema',     ...tint('#F9E4B7', '#F9EDCF', '#6E5520') },
+  coral:    { label: 'Coral',     ...tint('#F4A98C', '#FCE3D9', '#8A3F22') },
+  lilac:    { label: 'Lila',      ...tint('#D4B8E0', '#F1E6F6', '#6B3F80') },
+  sage:     { label: 'Salvia',    ...tint('#B5C9A8', '#E3EBDD', '#4A5E3C') },
+  butter:   { label: 'Mantequilla', ...tint('#F5E6A3', '#FBF3D3', '#6B5A12') },
 };
 
-// Colores para categorías creadas por el usuario
-const CATEGORY_PALETTE = [
-  { light: { bg: '#E9E1F5', text: '#5B4682' }, dark: { bg: 'rgba(195,177,225,0.18)', text: '#C3B1E1' } },
-  ...Object.values(CATEGORY_COLORS),
-];
+// Color por defecto de las categorías predefinidas
+export const DEFAULT_CATEGORY_COLORS = {
+  Código: 'sky',
+  Escritura: 'rose',
+  Marketing: 'mint',
+  Imagen: 'peach',
+  Productividad: 'cream',
+};
 
-const UNCATEGORIZED_COLORS = { light: { bg: '#ECEAE5', text: '#6B6560' }, dark: { bg: 'rgba(176,172,166,0.15)', text: '#B0ACA6' } };
+// Categorías creadas por el usuario: color estable a partir del nombre (mismo orden que antes)
+const HASH_KEYS = ['lavender', 'sky', 'rose', 'mint', 'peach', 'cream'];
 
-export function getCategoryColors(name) {
-  if (!name) return UNCATEGORIZED_COLORS;
-  if (CATEGORY_COLORS[name]) return CATEGORY_COLORS[name];
+const UNCATEGORIZED_COLORS = {
+  swatch: '#B0ACA6',
+  light: { bg: '#ECEAE5', text: '#6B6560', border: '#B0ACA6' },
+  dark: { bg: 'rgba(176,172,166,0.15)', text: '#B0ACA6', border: 'rgba(176,172,166,0.5)' },
+};
+
+export function getDefaultColorKey(name) {
+  if (DEFAULT_CATEGORY_COLORS[name]) return DEFAULT_CATEGORY_COLORS[name];
   let hash = 0;
   for (const ch of name) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
-  return CATEGORY_PALETTE[hash % CATEGORY_PALETTE.length];
+  return HASH_KEYS[hash % HASH_KEYS.length];
+}
+
+// `overrides` es el mapa { categoría: clave de COLOR_PALETTE } que el usuario ha personalizado
+export function getColorKey(name, overrides = {}) {
+  return COLOR_PALETTE[overrides[name]] ? overrides[name] : getDefaultColorKey(name);
+}
+
+export function getCategoryColors(name, overrides) {
+  if (!name) return UNCATEGORIZED_COLORS;
+  return COLOR_PALETTE[getColorKey(name, overrides)];
 }
 
 export const ITEM_TYPES = {
