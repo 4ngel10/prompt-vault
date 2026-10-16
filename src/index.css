@@ -45,6 +45,17 @@
     --color-danger: #F07878;
   }
 
+  /* Fondo del documento: es lo que se ve al estirar la página más allá de sus bordes (rebote en móvil) */
+  html {
+    background-color: var(--color-warm-50);
+    color-scheme: light;
+  }
+
+  html.dark {
+    background-color: var(--color-dark-900);
+    color-scheme: dark;
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
