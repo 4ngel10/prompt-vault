@@ -6,7 +6,7 @@ import SharedBadge from './SharedBadge';
 
 const menuItemClass = 'w-full flex items-center gap-2 px-3.5 py-2.5 sm:py-2 text-[13px] text-warm-600 dark:text-dark-200 hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer';
 
-export default function PromptCard({ prompt, dark, onEdit, onDelete, onToggleShare, onClick }) {
+export default function PromptCard({ prompt, dark, onEdit, onDelete, onShare, onClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const { getColors, resolveType } = usePreferences();
@@ -61,8 +61,8 @@ export default function PromptCard({ prompt, dark, onEdit, onDelete, onToggleSha
                   <button onClick={act(onEdit)} className={menuItemClass}>
                     <EditIcon /> Editar
                   </button>
-                  <button onClick={act(onToggleShare)} className={menuItemClass}>
-                    <ShareIcon /> {prompt.is_shared ? 'Dejar de compartir' : 'Compartir'}
+                  <button onClick={act(onShare)} className={menuItemClass}>
+                    <ShareIcon /> Compartir…
                   </button>
                   <button
                     onClick={act(onDelete)}

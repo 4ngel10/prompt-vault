@@ -14,6 +14,8 @@ import Modal from './components/Modal';
 import PromptForm from './components/PromptForm';
 import PromptDetail from './components/PromptDetail';
 import DeleteConfirm from './components/DeleteConfirm';
+import ShareDialog from './components/ShareDialog';
+import SharedItemPage from './components/SharedItemPage';
 import ListEditorModal from './components/ListEditorModal';
 import TypeBadge from './components/TypeBadge';
 import { PreferencesProvider, usePreferences } from './contexts/PreferencesContext';
@@ -22,6 +24,10 @@ import { CloseIcon } from './components/Icons';
 function App() {
   const [dark, toggleTheme] = useTheme();
   const { user } = useAuth();
+
+  // Enlace público (?s=<token>): vista de solo lectura, con o sin sesión
+  const shareToken = new URLSearchParams(window.location.search).get('s');
+  if (shareToken) return <SharedItemPage token={shareToken} dark={dark} onToggleTheme={toggleTheme} />;
 
   if (!user) return <AuthScreen dark={dark} onToggleTheme={toggleTheme} />;
   return (
@@ -33,7 +39,7 @@ function App() {
 
 function Vault({ user, dark, toggleTheme }) {
   const { signOut } = useAuth();
-  const { items: prompts, loading, error, dismissError, createItem, updateItem, deleteItem, toggleShare, clearCategory, renameCategory, reassignType } = useItems(user);
+  const { items: prompts, loading, error, dismissError, createItem, updateItem, deleteItem, addShare, removeShare, setPublicLink, clearCategory, renameCategory, reassignType } = useItems(user);
   const prefs = usePreferences();
   const { categories, types, resolveType } = prefs;
   const [search, setSearch] = useState('');
@@ -48,6 +54,7 @@ function Vault({ user, dark, toggleTheme }) {
   const [deletingPrompt, setDeletingPrompt] = useState(null);
   const [editingCategories, setEditingCategories] = useState(false);
   const [editingTypes, setEditingTypes] = useState(false);
+  const [sharingId, setSharingId] = useState(null);
 
   // Nº de items propios por categoría y por tipo, para los editores
   const [categoryCounts, typeCounts] = useMemo(() => {
@@ -116,9 +123,8 @@ function Vault({ user, dark, toggleTheme }) {
     } catch { /* aviso visible */ }
   };
 
-  const handleToggleShare = async (item) => {
-    try { await toggleShare(item); } catch { /* aviso visible */ }
-  };
+  // El diálogo lee siempre la versión actual del item para reflejar cada cambio al instante
+  const sharingItem = sharingId ? prompts.find(p => p.id === sharingId) : null;
 
   // Renombrar y eliminar tocan los items en Supabase y las preferencias; si falla, el modal lo muestra
   const handleRenameCategory = async (from, to) => {
@@ -190,7 +196,7 @@ function Vault({ user, dark, toggleTheme }) {
                 onClick={() => setViewingPrompt(p)}
                 onEdit={() => openEdit(p)}
                 onDelete={() => setDeletingPrompt(p)}
-                onToggleShare={() => handleToggleShare(p)}
+                onShare={() => setSharingId(p.id)}
               />
             ))}
           </div>
@@ -225,6 +231,17 @@ function Vault({ user, dark, toggleTheme }) {
         onClose={() => setViewingPrompt(null)}
         onEdit={() => { openEdit(viewingPrompt); setViewingPrompt(null); }}
         onDelete={() => { setDeletingPrompt(viewingPrompt); }}
+        onShare={() => { setSharingId(viewingPrompt.id); setViewingPrompt(null); }}
+      />
+
+      {/* Share dialog: specific people and/or public link */}
+      <ShareDialog
+        item={sharingItem}
+        userEmail={user.email}
+        onClose={() => setSharingId(null)}
+        onAddShare={email => addShare(sharingItem.id, email)}
+        onRemoveShare={email => removeShare(sharingItem.id, email)}
+        onSetLink={enabled => setPublicLink(sharingItem.id, enabled)}
       />
 
       {/* Delete confirmation */}

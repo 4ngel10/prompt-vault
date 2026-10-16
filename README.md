@@ -10,7 +10,7 @@ Aplicación web personal para guardar, organizar y gestionar prompts y skills de
 - Tipos de item personalizables (por defecto Prompt y Skill): crear, renombrar, eliminar, reordenar y elegir su color, con filtro por tipo
 - Búsqueda por título y contenido
 - Categorías personalizables: crear, renombrar, eliminar, reordenar (arrastrar y soltar) y elegir su color
-- Compartir items con otros usuarios (solo lectura para ellos)
+- Compartir items de dos formas: con personas concretas por email (lo ven en su bóveda al iniciar sesión) o con un enlace público de solo lectura que no requiere cuenta
 - Copiar al portapapeles en un clic
 - Modo oscuro
 - Responsive e instalable como PWA
@@ -46,6 +46,7 @@ Ejecuta en el SQL Editor de Supabase, en este orden:
 2. [`supabase/user_preferences.sql`](supabase/user_preferences.sql): tabla `user_preferences` (colores).
 3. [`supabase/user_preferences_v2.sql`](supabase/user_preferences_v2.sql): orden de categorías y colores de los tipos.
 4. [`supabase/types_v3.sql`](supabase/types_v3.sql): tipos personalizables.
+5. [`supabase/sharing_v4.sql`](supabase/sharing_v4.sql): compartir por email y enlace público.
 
 En Supabase → Authentication → URL Configuration, añade como Redirect URLs la URL de producción y `http://localhost:5173`.
 

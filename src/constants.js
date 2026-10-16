@@ -137,4 +137,7 @@ export function getDefaultTypeColorKey(id) {
   return keys[hash % keys.length];
 }
 
+// URL pública de solo lectura de un item compartido por enlace
+export const shareUrl = (token) => `${window.location.origin}/?s=${token}`;
+
 export const NEUTRAL_COLORS = { ...UNCATEGORIZED_COLORS, rgb: '176,172,166' };

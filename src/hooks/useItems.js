@@ -1,15 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 
-const COLUMNS = 'id, user_id, owner_email, title, category, text, type, is_shared, created_at';
+const COLUMNS = 'id, user_id, owner_email, title, category, text, type, share_token, created_at';
 
 export function useItems(user) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Marca si el item pertenece al usuario actual (los demás son compartidos por otros)
-  const withOwnership = useCallback(row => ({ ...row, isOwn: row.user_id === user.id }), [user.id]);
+  // Marca si el item pertenece al usuario actual (los demás los han compartido contigo).
+  // `shares` son los emails con los que has compartido un item propio.
+  const withOwnership = useCallback(
+    (row, shares = []) => ({ ...row, isOwn: row.user_id === user.id, shares }),
+    [user.id]
+  );
 
   const run = async (promise) => {
     const { data, error } = await promise;
@@ -23,18 +27,23 @@ export function useItems(user) {
 
   useEffect(() => {
     let cancelled = false;
-    supabase
-      .from('items')
-      .select(COLUMNS)
-      .order('created_at', { ascending: false })
-      .then(({ data, error }) => {
-        if (cancelled) return;
-        if (error) setError(error.message);
-        else setItems(data.map(withOwnership));
-        setLoading(false);
-      });
+    Promise.all([
+      supabase.from('items').select(COLUMNS).order('created_at', { ascending: false }),
+      supabase.from('item_shares').select('item_id, email').order('created_at'),
+    ]).then(([itemsRes, sharesRes]) => {
+      if (cancelled) return;
+      if (itemsRes.error) { setError(itemsRes.error.message); setLoading(false); return; }
+      if (sharesRes.error) setError(sharesRes.error.message);
+      const byItem = {};
+      for (const s of sharesRes.data ?? []) (byItem[s.item_id] ??= []).push(s.email);
+      // Las filas de item_shares de items ajenos son las que te incluyen a ti: no se muestran como "compartido con"
+      setItems(itemsRes.data.map(row => withOwnership(row, row.user_id === user.id ? byItem[row.id] ?? [] : [])));
+      setLoading(false);
+    });
     return () => { cancelled = true; };
-  }, [withOwnership]);
+  }, [withOwnership, user.id]);
+
+  const patchItem = (id, fn) => setItems(prev => prev.map(i => (i.id === id ? fn(i) : i)));
 
   const createItem = async ({ title, category, text, type }) => {
     const row = await run(
@@ -47,7 +56,7 @@ export function useItems(user) {
     const row = await run(
       supabase.from('items').update(changes).eq('id', id).select(COLUMNS).single()
     );
-    setItems(prev => prev.map(i => i.id === id ? withOwnership(row) : i));
+    patchItem(id, i => withOwnership(row, i.shares));
   };
 
   const deleteItem = async (id) => {
@@ -55,7 +64,20 @@ export function useItems(user) {
     setItems(prev => prev.filter(i => i.id !== id));
   };
 
-  const toggleShare = (item) => updateItem(item.id, { is_shared: !item.is_shared });
+  // Compartir con una persona: la verá en su bóveda al iniciar sesión con ese email
+  const addShare = async (id, email) => {
+    await run(supabase.from('item_shares').insert({ item_id: id, email }));
+    patchItem(id, i => ({ ...i, shares: [...i.shares, email] }));
+  };
+
+  const removeShare = async (id, email) => {
+    await run(supabase.from('item_shares').delete().eq('item_id', id).eq('email', email));
+    patchItem(id, i => ({ ...i, shares: i.shares.filter(e => e !== email) }));
+  };
+
+  // Enlace público: un token aleatorio activa la lectura sin cuenta; null lo desactiva
+  const setPublicLink = (id, enabled) =>
+    updateItem(id, { share_token: enabled ? crypto.randomUUID() : null });
 
   const clearCategory = async (name) => {
     await run(supabase.from('items').update({ category: '' }).eq('user_id', user.id).eq('category', name));
@@ -73,5 +95,10 @@ export function useItems(user) {
     setItems(prev => prev.map(i => i.isOwn && i.type === from ? { ...i, type: to } : i));
   };
 
-  return { items, loading, error, dismissError: () => setError(null), createItem, updateItem, deleteItem, toggleShare, clearCategory, renameCategory, reassignType };
+  return {
+    items, loading, error, dismissError: () => setError(null),
+    createItem, updateItem, deleteItem,
+    addShare, removeShare, setPublicLink,
+    clearCategory, renameCategory, reassignType,
+  };
 }

@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { usePreferences } from '../contexts/PreferencesContext';
 import TypeBadge from './TypeBadge';
 import SharedBadge from './SharedBadge';
-import { CopyIcon, EditIcon, TrashIcon, CheckIcon } from './Icons';
+import { CopyIcon, EditIcon, TrashIcon, CheckIcon, ShareIcon } from './Icons';
 import Modal from './Modal';
 
-export default function PromptDetail({ prompt, dark, onClose, onEdit, onDelete }) {
+export default function PromptDetail({ prompt, dark, onClose, onEdit, onDelete, onShare }) {
   const [copied, setCopied] = useState(false);
   const { getColors, resolveType } = usePreferences();
 
@@ -54,7 +54,19 @@ export default function PromptDetail({ prompt, dark, onClose, onEdit, onDelete }
           {copied ? <><CheckIcon className="w-4 h-4 text-mint" /> Copiado</> : <><CopyIcon /> Copiar al portapapeles</>}
         </button>
 
-        {prompt.isOwn && <div className="flex gap-2.5 border-t border-warm-200 dark:border-dark-500 pt-4">
+        {prompt.isOwn && prompt.shares?.length > 0 && (
+          <p className="text-[12px] text-warm-500 dark:text-dark-300 -mt-2 mb-4 break-words">
+            Compartido con {prompt.shares.join(', ')}
+          </p>
+        )}
+
+        {prompt.isOwn && <div className="flex flex-wrap gap-2.5 border-t border-warm-200 dark:border-dark-500 pt-4">
+          <button
+            onClick={onShare}
+            className="flex-1 sm:flex-none justify-center flex items-center gap-1.5 px-4 py-2.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-white dark:bg-dark-700 text-warm-600 dark:text-dark-200 text-[13px] font-medium hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer"
+          >
+            <ShareIcon /> Compartir
+          </button>
           <button
             onClick={onEdit}
             className="flex-1 sm:flex-none justify-center flex items-center gap-1.5 px-4 py-2.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-white dark:bg-dark-700 text-warm-600 dark:text-dark-200 text-[13px] font-medium hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer"
