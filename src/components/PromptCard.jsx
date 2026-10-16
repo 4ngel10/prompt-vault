@@ -1,10 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
-import { DotsIcon, EditIcon, TrashIcon } from './Icons';
+import { DotsIcon, EditIcon, TrashIcon, ShareIcon, CopyIcon, CheckIcon } from './Icons';
 import { getCategoryColors, getItemType } from '../constants';
 import TypeBadge from './TypeBadge';
+import SharedBadge from './SharedBadge';
 
-export default function PromptCard({ prompt, dark, onEdit, onDelete, onClick }) {
+const menuItemClass = 'w-full flex items-center gap-2 px-3.5 py-2.5 sm:py-2 text-[13px] text-warm-600 dark:text-dark-200 hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer';
+
+export default function PromptCard({ prompt, dark, onEdit, onDelete, onToggleShare, onClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -15,6 +19,16 @@ export default function PromptCard({ prompt, dark, onEdit, onDelete, onClick }) 
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [menuOpen]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(prompt.text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* fallback */ }
+  };
+
+  const act = (fn) => (e) => { e.stopPropagation(); setMenuOpen(false); fn(); };
 
   const colors = getCategoryColors(prompt.category);
   const scheme = dark ? colors.dark : colors.light;
@@ -37,19 +51,26 @@ export default function PromptCard({ prompt, dark, onEdit, onDelete, onClick }) 
             <DotsIcon />
           </button>
           {menuOpen && (
-            <div className="absolute right-0 top-8 bg-white dark:bg-dark-700 border border-warm-200 dark:border-dark-500 rounded-xl shadow-lg py-1.5 min-w-[140px] z-10">
-              <button
-                onClick={e => { e.stopPropagation(); setMenuOpen(false); onEdit(); }}
-                className="w-full flex items-center gap-2 px-3.5 py-2.5 sm:py-2 text-[13px] text-warm-600 dark:text-dark-200 hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer"
-              >
-                <EditIcon /> Editar
+            <div className="absolute right-0 top-8 bg-white dark:bg-dark-700 border border-warm-200 dark:border-dark-500 rounded-xl shadow-lg py-1.5 min-w-[170px] z-10">
+              <button onClick={act(handleCopy)} className={menuItemClass}>
+                <CopyIcon className="w-3.5 h-3.5" /> Copiar
               </button>
-              <button
-                onClick={e => { e.stopPropagation(); setMenuOpen(false); onDelete(); }}
-                className="w-full flex items-center gap-2 px-3.5 py-2.5 sm:py-2 text-[13px] text-danger hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
-              >
-                <TrashIcon /> Eliminar
-              </button>
+              {prompt.isOwn && (
+                <>
+                  <button onClick={act(onEdit)} className={menuItemClass}>
+                    <EditIcon /> Editar
+                  </button>
+                  <button onClick={act(onToggleShare)} className={menuItemClass}>
+                    <ShareIcon /> {prompt.is_shared ? 'Dejar de compartir' : 'Compartir'}
+                  </button>
+                  <button
+                    onClick={act(onDelete)}
+                    className="w-full flex items-center gap-2 px-3.5 py-2.5 sm:py-2 text-[13px] text-danger hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
+                  >
+                    <TrashIcon /> Eliminar
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -65,6 +86,12 @@ export default function PromptCard({ prompt, dark, onEdit, onDelete, onClick }) 
         >
           {prompt.category || 'Sin categoría'}
         </span>
+        <SharedBadge item={prompt} />
+        {copied && (
+          <span className="ml-auto flex items-center gap-1 text-[12px] text-[#2E6644] dark:text-mint">
+            <CheckIcon className="w-3.5 h-3.5" /> Copiado
+          </span>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,10 @@
 import { useState, useMemo } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useTheme } from './hooks/useTheme';
-import { SAMPLE_PROMPTS, CATEGORIES, ITEM_TYPES, getItemType } from './constants';
+import { useItems } from './hooks/useItems';
+import { useAuth } from './contexts/AuthContext';
+import { CATEGORIES, ITEM_TYPES, getItemType } from './constants';
+import AuthScreen from './components/AuthScreen';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import TypeFilter from './components/TypeFilter';
@@ -13,10 +16,19 @@ import PromptForm from './components/PromptForm';
 import PromptDetail from './components/PromptDetail';
 import DeleteConfirm from './components/DeleteConfirm';
 import CategoryManager from './components/CategoryManager';
+import { CloseIcon } from './components/Icons';
 
 function App() {
   const [dark, toggleTheme] = useTheme();
-  const [prompts, setPrompts] = useLocalStorage('pv-prompts', SAMPLE_PROMPTS);
+  const { user } = useAuth();
+
+  if (!user) return <AuthScreen dark={dark} onToggleTheme={toggleTheme} />;
+  return <Vault key={user.id} user={user} dark={dark} toggleTheme={toggleTheme} />;
+}
+
+function Vault({ user, dark, toggleTheme }) {
+  const { signOut } = useAuth();
+  const { items: prompts, loading, error, dismissError, createItem, updateItem, deleteItem, toggleShare, clearCategory } = useItems(user);
   const [categories, setCategories] = useLocalStorage('pv-categories', CATEGORIES);
   const [search, setSearch] = useState('');
   const [activeType, setActiveType] = useState('all');
@@ -30,6 +42,8 @@ function App() {
   const [deletingPrompt, setDeletingPrompt] = useState(null);
   const [managingCategories, setManagingCategories] = useState(false);
 
+  const ownPrompts = useMemo(() => prompts.filter(p => p.isOwn), [prompts]);
+
   const filtered = useMemo(() => {
     return prompts.filter(p => {
       const matchesType = activeType === 'all' || getItemType(p) === activeType;
@@ -38,6 +52,12 @@ function App() {
       return matchesType && matchesCategory && matchesSearch;
     });
   }, [prompts, activeType, activeCategory, search]);
+
+  const goHome = () => {
+    setSearch('');
+    setActiveType('all');
+    setActiveCategory('Todos');
+  };
 
   const openCreate = (type) => {
     setFormType(type);
@@ -49,39 +69,62 @@ function App() {
     setEditingPrompt(item);
   };
 
-  const handleCreate = (data) => {
-    const newPrompt = { ...data, id: Date.now().toString() };
-    setPrompts(prev => [newPrompt, ...prev]);
-    setCreateOpen(false);
+  // Si Supabase falla, useItems muestra el aviso y el modal sigue abierto para reintentar
+  const handleCreate = async (data) => {
+    try {
+      await createItem(data);
+      setCreateOpen(false);
+    } catch { /* aviso visible */ }
   };
 
-  const handleEdit = (data) => {
-    setPrompts(prev => prev.map(p => p.id === editingPrompt.id ? { ...p, ...data } : p));
-    setEditingPrompt(null);
-    setViewingPrompt(null);
+  const handleEdit = async (data) => {
+    try {
+      await updateItem(editingPrompt.id, data);
+      setEditingPrompt(null);
+      setViewingPrompt(null);
+    } catch { /* aviso visible */ }
   };
 
-  const handleDelete = () => {
-    setPrompts(prev => prev.filter(p => p.id !== deletingPrompt.id));
-    setDeletingPrompt(null);
-    setViewingPrompt(null);
+  const handleDelete = async () => {
+    try {
+      await deleteItem(deletingPrompt.id);
+      setDeletingPrompt(null);
+      setViewingPrompt(null);
+    } catch { /* aviso visible */ }
+  };
+
+  const handleToggleShare = async (item) => {
+    try { await toggleShare(item); } catch { /* aviso visible */ }
   };
 
   const handleAddCategory = (name) => {
     setCategories(prev => [...prev, name]);
   };
 
-  const handleDeleteCategory = (name) => {
-    setCategories(prev => prev.filter(c => c !== name));
-    setPrompts(prev => prev.map(p => p.category === name ? { ...p, category: '' } : p));
-    if (activeCategory === name) setActiveCategory('Todos');
+  const handleDeleteCategory = async (name) => {
+    try {
+      await clearCategory(name);
+      setCategories(prev => prev.filter(c => c !== name));
+      if (activeCategory === name) setActiveCategory('Todos');
+    } catch { /* aviso visible */ }
+  };
+
+  const handleSignOut = async () => {
+    try { await signOut(); } catch { /* la sesión local se limpia igualmente */ }
   };
 
   const emptyLabel = activeType === 'all' ? 'elementos' : ITEM_TYPES[activeType].plural.toLowerCase();
 
   return (
     <div className="min-h-screen bg-warm-50 dark:bg-dark-900 text-warm-800 dark:text-dark-100 transition-colors">
-      <Header dark={dark} onToggleTheme={toggleTheme} onNew={openCreate} />
+      <Header
+        dark={dark}
+        onToggleTheme={toggleTheme}
+        onNew={openCreate}
+        onHome={goHome}
+        userEmail={user.email}
+        onSignOut={handleSignOut}
+      />
 
       <div className="max-w-[1160px] mx-auto px-4 sm:px-10 pt-5 sm:pt-7 pb-[max(1.75rem,env(safe-area-inset-bottom))]">
         <SearchBar value={search} onChange={setSearch} />
@@ -93,7 +136,11 @@ function App() {
           onManage={() => setManagingCategories(true)}
         />
 
-        {prompts.length === 0 ? (
+        {loading ? (
+          <div className="flex justify-center py-24" role="status" aria-label="Cargando">
+            <div className="w-9 h-9 rounded-full border-[3px] border-lavender/30 border-t-lavender animate-spin" />
+          </div>
+        ) : prompts.length === 0 ? (
           <EmptyState onNew={openCreate} />
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
@@ -111,11 +158,23 @@ function App() {
                 onClick={() => setViewingPrompt(p)}
                 onEdit={() => openEdit(p)}
                 onDelete={() => setDeletingPrompt(p)}
+                onToggleShare={() => handleToggleShare(p)}
               />
             ))}
           </div>
         )}
       </div>
+
+      {error && (
+        <div role="alert" className="fixed z-[60] left-4 right-4 sm:left-auto sm:right-6 bottom-[max(1rem,env(safe-area-inset-bottom))] sm:max-w-sm flex items-start gap-3 px-4 py-3 rounded-xl border border-red-200 dark:border-red-900/40 bg-white dark:bg-dark-700 shadow-lg">
+          <p className="flex-1 text-[13px] leading-snug text-danger">
+            No se pudo completar la operación: {error}
+          </p>
+          <button onClick={dismissError} className="shrink-0 text-warm-400 dark:text-dark-400 hover:text-warm-700 dark:hover:text-dark-100 cursor-pointer" aria-label="Cerrar aviso">
+            <CloseIcon className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Create modal */}
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title={ITEM_TYPES[formType].newTitle}>
@@ -149,7 +208,7 @@ function App() {
         open={managingCategories}
         onClose={() => setManagingCategories(false)}
         categories={categories}
-        prompts={prompts}
+        prompts={ownPrompts}
         onAdd={handleAddCategory}
         onDelete={handleDeleteCategory}
       />
