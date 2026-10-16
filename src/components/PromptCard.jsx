@@ -46,7 +46,7 @@ export default function PromptCard({ prompt, dark, onEdit, onDelete, onShare, on
         <div className="relative shrink-0" ref={menuRef}>
           <button
             onClick={e => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
-            className="w-9 h-9 sm:w-[30px] sm:h-[30px] -mr-1.5 -mt-1.5 sm:m-0 rounded-lg flex items-center justify-center text-warm-400 dark:text-dark-400 hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer"
+            className="w-11 h-11 sm:w-[30px] sm:h-[30px] -mr-2.5 -mt-2.5 sm:m-0 rounded-lg flex items-center justify-center text-warm-400 dark:text-dark-400 hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer"
             aria-label="Más opciones"
           >
             <DotsIcon />

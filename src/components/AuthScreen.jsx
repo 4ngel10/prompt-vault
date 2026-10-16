@@ -12,14 +12,17 @@ const ERROR_MESSAGES = {
 function friendlyError(err) {
   const msg = err?.message ?? String(err);
   if (ERROR_MESSAGES[msg]) return ERROR_MESSAGES[msg];
-  if (/password should be at least/i.test(msg)) return 'La contraseña debe tener al menos 6 caracteres.';
+  if (/password should be at least/i.test(msg)) return `La contraseña debe tener al menos ${MIN_PASSWORD} caracteres.`;
   if (/rate limit/i.test(msg)) return 'Demasiados intentos. Espera un momento y vuelve a probar.';
   if (/invalid.*email|email.*invalid/i.test(msg)) return 'El email no es válido.';
   if (/failed to fetch|network/i.test(msg)) return 'No se pudo conectar con el servidor. Revisa tu conexión.';
   return msg;
 }
 
-const inputClass = 'w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none focus:border-lavender transition-colors';
+// Debe coincidir con el mínimo configurado en Supabase (Authentication → Providers → Email)
+const MIN_PASSWORD = 8;
+
+const inputClass = 'w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-500 dark:placeholder:text-dark-300 outline-none focus:border-lavender transition-colors';
 const labelClass = 'block text-[13px] font-semibold text-warm-600 dark:text-dark-300 mb-1.5';
 
 export default function AuthScreen({ dark, onToggleTheme }) {
@@ -77,7 +80,7 @@ export default function AuthScreen({ dark, onToggleTheme }) {
       <div className="flex justify-end px-4 sm:px-10 pt-[max(0.75rem,env(safe-area-inset-top))] py-3">
         <button
           onClick={onToggleTheme}
-          className="w-[38px] h-[38px] rounded-[10px] border border-warm-200 dark:border-dark-500 bg-white dark:bg-dark-700 flex items-center justify-center text-warm-600 dark:text-dark-200 hover:bg-warm-100 dark:hover:bg-dark-600 transition-colors cursor-pointer"
+          className="w-11 h-11 sm:w-[38px] sm:h-[38px] rounded-[10px] border border-warm-200 dark:border-dark-500 bg-white dark:bg-dark-700 flex items-center justify-center text-warm-600 dark:text-dark-200 hover:bg-warm-100 dark:hover:bg-dark-600 transition-colors cursor-pointer"
           aria-label={dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
         >
           {dark ? <MoonIcon /> : <SunIcon />}
@@ -108,7 +111,7 @@ export default function AuthScreen({ dark, onToggleTheme }) {
 
             <div className="flex items-center gap-3 my-5">
               <div className="flex-1 h-px bg-warm-200 dark:bg-dark-500" />
-              <span className="text-[12px] text-warm-400 dark:text-dark-400">o con tu email</span>
+              <span className="text-[12px] text-warm-500 dark:text-dark-300">o con tu email</span>
               <div className="flex-1 h-px bg-warm-200 dark:bg-dark-500" />
             </div>
 
@@ -133,8 +136,8 @@ export default function AuthScreen({ dark, onToggleTheme }) {
                   type="password"
                   autoComplete={isLogin ? 'current-password' : 'new-password'}
                   required
-                  minLength={6}
-                  placeholder={isLogin ? 'Tu contraseña' : 'Mínimo 6 caracteres'}
+                  minLength={isLogin ? undefined : MIN_PASSWORD}
+                  placeholder={isLogin ? 'Tu contraseña' : `Mínimo ${MIN_PASSWORD} caracteres`}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   className={inputClass}
@@ -167,6 +170,12 @@ export default function AuthScreen({ dark, onToggleTheme }) {
             <button onClick={switchMode} className="font-semibold text-[#5B4682] dark:text-lavender hover:underline cursor-pointer">
               {isLogin ? 'Regístrate' : 'Inicia sesión'}
             </button>
+          </p>
+
+          <p className="text-center text-[12px] text-warm-500 dark:text-dark-300 mt-6 leading-relaxed">
+            {isLogin ? 'Al continuar' : 'Al crear tu cuenta'} aceptas el tratamiento de tus datos descrito en la{' '}
+            <a href="/privacy.html" className="underline hover:text-warm-800 dark:hover:text-dark-100">política de privacidad</a>.
+            {' '}<a href="/aviso-legal.html" className="underline hover:text-warm-800 dark:hover:text-dark-100">Aviso legal</a>
           </p>
         </div>
       </main>

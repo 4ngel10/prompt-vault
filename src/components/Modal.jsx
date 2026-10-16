@@ -23,7 +23,7 @@ export default function Modal({ open, onClose, title, children, width = 'max-w-l
           <h2 className="text-lg font-bold text-warm-800 dark:text-dark-100">{title}</h2>
           <button
             onClick={onClose}
-            className="w-9 h-9 sm:w-8 sm:h-8 shrink-0 rounded-lg bg-warm-100 dark:bg-dark-600 flex items-center justify-center text-warm-500 dark:text-dark-300 hover:bg-warm-200 dark:hover:bg-dark-500 transition-colors cursor-pointer"
+            className="w-11 h-11 sm:w-8 sm:h-8 -mr-1.5 sm:mr-0 shrink-0 rounded-lg bg-warm-100 dark:bg-dark-600 flex items-center justify-center text-warm-500 dark:text-dark-300 hover:bg-warm-200 dark:hover:bg-dark-500 transition-colors cursor-pointer"
             aria-label="Cerrar"
           >
             <CloseIcon />

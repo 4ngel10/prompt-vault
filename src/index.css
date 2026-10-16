@@ -1,15 +1,16 @@
 @import "tailwindcss";
+@import "@fontsource-variable/plus-jakarta-sans";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
 
   --color-warm-50: #FAFAF8;
   --color-warm-100: #F5F4F0;
   --color-warm-200: #ECEAE5;
-  --color-warm-400: #9B9690;
+  --color-warm-400: #8A857F;
   --color-warm-500: #6B6560;
   --color-warm-600: #5A5550;
   --color-warm-700: #3A3835;
@@ -35,10 +36,15 @@
   --color-lilac: #D4B8E0;
   --color-sage: #B5C9A8;
   --color-butter: #F5E6A3;
-  --color-danger: #D94444;
+  --color-danger: #C53030;
 }
 
 @layer base {
+  /* En oscuro, el rojo se aclara para mantener ≥4.5:1 sobre los fondos dark-700/800 */
+  .dark {
+    --color-danger: #F07878;
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;

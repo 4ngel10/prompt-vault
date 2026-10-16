@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 
-const COLUMNS = 'id, user_id, owner_email, title, category, text, type, share_token, created_at';
+const COLUMNS = 'id, user_id, owner_email, title, category, text, type, share_token, created_at, deleted_at';
+
+// Días que un item pasa en la papelera antes de borrarse definitivamente
+export const TRASH_DAYS = 30;
 
 export function useItems(user) {
-  const [items, setItems] = useState([]);
+  const [allItems, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -37,11 +40,24 @@ export function useItems(user) {
       const byItem = {};
       for (const s of sharesRes.data ?? []) (byItem[s.item_id] ??= []).push(s.email);
       // Las filas de item_shares de items ajenos son las que te incluyen a ti: no se muestran como "compartido con"
-      setItems(itemsRes.data.map(row => withOwnership(row, row.user_id === user.id ? byItem[row.id] ?? [] : [])));
+      const rows = itemsRes.data.map(row => withOwnership(row, row.user_id === user.id ? byItem[row.id] ?? [] : []));
+      // Lo que lleva más de TRASH_DAYS en la papelera se borra definitivamente (si falla, se reintenta en la próxima carga)
+      const cutoff = new Date(Date.now() - TRASH_DAYS * 864e5).toISOString();
+      const expired = rows.filter(r => r.isOwn && r.deleted_at && r.deleted_at < cutoff);
+      if (expired.length) {
+        supabase.from('items').delete().eq('user_id', user.id).lt('deleted_at', cutoff).then(() => {});
+      }
+      setItems(rows.filter(r => !expired.includes(r)));
       setLoading(false);
     });
     return () => { cancelled = true; };
   }, [withOwnership, user.id]);
+
+  const items = useMemo(() => allItems.filter(i => !i.deleted_at), [allItems]);
+  const trash = useMemo(
+    () => allItems.filter(i => i.isOwn && i.deleted_at).sort((a, b) => b.deleted_at.localeCompare(a.deleted_at)),
+    [allItems]
+  );
 
   const patchItem = (id, fn) => setItems(prev => prev.map(i => (i.id === id ? fn(i) : i)));
 
@@ -59,9 +75,19 @@ export function useItems(user) {
     patchItem(id, i => withOwnership(row, i.shares));
   };
 
-  const deleteItem = async (id) => {
-    await run(supabase.from('items').delete().eq('id', id));
+  // Eliminar mueve a la papelera; restaurar lo devuelve a la bóveda
+  const trashItem = (id) => updateItem(id, { deleted_at: new Date().toISOString() });
+  const restoreItem = (id) => updateItem(id, { deleted_at: null });
+
+  // Borrado definitivo: solo desde la papelera
+  const purgeItem = async (id) => {
+    await run(supabase.from('items').delete().eq('id', id).not('deleted_at', 'is', null));
     setItems(prev => prev.filter(i => i.id !== id));
+  };
+
+  const emptyTrash = async () => {
+    await run(supabase.from('items').delete().eq('user_id', user.id).not('deleted_at', 'is', null));
+    setItems(prev => prev.filter(i => !(i.isOwn && i.deleted_at)));
   };
 
   // Compartir con una persona: la verá en su bóveda al iniciar sesión con ese email
@@ -96,8 +122,9 @@ export function useItems(user) {
   };
 
   return {
-    items, loading, error, dismissError: () => setError(null),
-    createItem, updateItem, deleteItem,
+    items, trash, loading, error, dismissError: () => setError(null),
+    createItem, updateItem,
+    trashItem, restoreItem, purgeItem, emptyTrash,
     addShare, removeShare, setPublicLink,
     clearCategory, renameCategory, reassignType,
   };

@@ -6,8 +6,8 @@ import { COLOR_PALETTE } from '../constants';
 const PALETTE_KEYS = Object.keys(COLOR_PALETTE);
 const MAX_NAME = 30;
 
-const inputClass = 'flex-1 min-w-0 py-2 px-3 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none focus:border-lavender transition-colors';
-const iconButtonClass = 'w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-warm-400 dark:text-dark-400 transition-colors cursor-pointer';
+const inputClass = 'flex-1 min-w-0 py-2 px-3 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-500 dark:placeholder:text-dark-300 outline-none focus:border-lavender transition-colors';
+const iconButtonClass = 'w-11 h-11 sm:w-8 sm:h-8 shrink-0 rounded-lg flex items-center justify-center text-warm-400 dark:text-dark-400 transition-colors cursor-pointer';
 
 function validateName(name, entries, currentId) {
   const t = name.trim();
@@ -197,7 +197,7 @@ export default function ListEditorModal({
       <p className="min-h-5 mt-1 text-[12px] text-danger" role="status">{addError}</p>
 
       {list.length === 0 ? (
-        <p className="text-[13px] text-warm-400 dark:text-dark-400 py-6 text-center">{emptyText}</p>
+        <p className="text-[13px] text-warm-500 dark:text-dark-300 py-6 text-center">{emptyText}</p>
       ) : (
         <ul className="flex flex-col divide-y divide-warm-200 dark:divide-dark-500 border-y border-warm-200 dark:border-dark-500">
           {list.map((entry, index) => {
@@ -259,7 +259,7 @@ export default function ListEditorModal({
                   ) : (
                     <>
                       <span className="min-w-0 flex">{renderPreview(entry)}</span>
-                      <span className="shrink-0 text-[12px] text-warm-400 dark:text-dark-400 tabular-nums" title={`${count} elementos`}>
+                      <span className="shrink-0 text-[12px] text-warm-500 dark:text-dark-300 tabular-nums" title={`${count} elementos`}>
                         {count}
                       </span>
                       <span className="flex-1" />

@@ -24,6 +24,19 @@ export default function SharedItemPage({ token, dark, onToggleTheme }) {
 
   const item = state.item;
 
+  // Los enlaces compartidos no deben aparecer en buscadores (también lo indica la cabecera X-Robots-Tag de vercel.json)
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    return () => meta.remove();
+  }, []);
+
+  useEffect(() => {
+    if (item?.title) document.title = `${item.title} · Prompt Vault`;
+  }, [item?.title]);
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(item.text);
@@ -44,7 +57,7 @@ export default function SharedItemPage({ token, dark, onToggleTheme }) {
         </a>
         <button
           onClick={onToggleTheme}
-          className="w-[38px] h-[38px] rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 flex items-center justify-center text-warm-600 dark:text-dark-200 hover:bg-warm-100 dark:hover:bg-dark-600 transition-colors cursor-pointer"
+          className="w-11 h-11 sm:w-[38px] sm:h-[38px] rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 flex items-center justify-center text-warm-600 dark:text-dark-200 hover:bg-warm-100 dark:hover:bg-dark-600 transition-colors cursor-pointer"
           aria-label={dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
         >
           {dark ? <MoonIcon /> : <SunIcon />}
@@ -113,6 +126,11 @@ export default function SharedItemPage({ token, dark, onToggleTheme }) {
             <a href="/" className="font-semibold text-[#5B4682] dark:text-lavender hover:underline">Crea tu propia bóveda</a>
           </p>
         )}
+
+        <p className="flex justify-center gap-4 text-[12px] text-warm-500 dark:text-dark-300 mt-8">
+          <a href="/privacy.html" className="py-2 hover:underline">Privacidad</a>
+          <a href="/aviso-legal.html" className="py-2 hover:underline">Aviso legal</a>
+        </p>
       </main>
     </div>
   );

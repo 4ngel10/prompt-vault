@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, lazy, Suspense } from 'react';
 import { useTheme } from './hooks/useTheme';
 import { useItems } from './hooks/useItems';
 import { useAuth } from './contexts/AuthContext';
@@ -11,15 +11,26 @@ import CategoryChips from './components/CategoryChips';
 import PromptCard from './components/PromptCard';
 import EmptyState from './components/EmptyState';
 import Modal from './components/Modal';
-import PromptForm from './components/PromptForm';
 import PromptDetail from './components/PromptDetail';
 import DeleteConfirm from './components/DeleteConfirm';
-import ShareDialog from './components/ShareDialog';
-import SharedItemPage from './components/SharedItemPage';
-import ListEditorModal from './components/ListEditorModal';
 import TypeBadge from './components/TypeBadge';
 import { PreferencesProvider, usePreferences } from './contexts/PreferencesContext';
 import { CloseIcon } from './components/Icons';
+
+// Se cargan bajo demanda: no hacen falta para pintar la bóveda
+const PromptForm = lazy(() => import('./components/PromptForm'));
+const ShareDialog = lazy(() => import('./components/ShareDialog'));
+const SharedItemPage = lazy(() => import('./components/SharedItemPage'));
+const ListEditorModal = lazy(() => import('./components/ListEditorModal'));
+const TrashDialog = lazy(() => import('./components/TrashDialog'));
+
+const UNDO_MS = 6000;
+
+const Spinner = () => (
+  <div className="flex justify-center py-24" role="status" aria-label="Cargando">
+    <div className="w-9 h-9 rounded-full border-[3px] border-lavender/30 border-t-lavender animate-spin" />
+  </div>
+);
 
 function App() {
   const [dark, toggleTheme] = useTheme();
@@ -27,7 +38,13 @@ function App() {
 
   // Enlace público (?s=<token>): vista de solo lectura, con o sin sesión
   const shareToken = new URLSearchParams(window.location.search).get('s');
-  if (shareToken) return <SharedItemPage token={shareToken} dark={dark} onToggleTheme={toggleTheme} />;
+  if (shareToken) {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-warm-50 dark:bg-dark-900"><Spinner /></div>}>
+        <SharedItemPage token={shareToken} dark={dark} onToggleTheme={toggleTheme} />
+      </Suspense>
+    );
+  }
 
   if (!user) return <AuthScreen dark={dark} onToggleTheme={toggleTheme} />;
   return (
@@ -39,7 +56,7 @@ function App() {
 
 function Vault({ user, dark, toggleTheme }) {
   const { signOut } = useAuth();
-  const { items: prompts, loading, error, dismissError, createItem, updateItem, deleteItem, addShare, removeShare, setPublicLink, clearCategory, renameCategory, reassignType } = useItems(user);
+  const { items: prompts, trash, loading, error, dismissError, createItem, updateItem, trashItem, restoreItem, purgeItem, emptyTrash, addShare, removeShare, setPublicLink, clearCategory, renameCategory, reassignType } = useItems(user);
   const prefs = usePreferences();
   const { categories, types, resolveType } = prefs;
   const [search, setSearch] = useState('');
@@ -55,6 +72,15 @@ function Vault({ user, dark, toggleTheme }) {
   const [editingCategories, setEditingCategories] = useState(false);
   const [editingTypes, setEditingTypes] = useState(false);
   const [sharingId, setSharingId] = useState(null);
+  const [trashOpen, setTrashOpen] = useState(false);
+  // Último item enviado a la papelera, para ofrecer "Deshacer" durante unos segundos
+  const [undo, setUndo] = useState(null);
+
+  useEffect(() => {
+    if (!undo) return;
+    const t = setTimeout(() => setUndo(null), UNDO_MS);
+    return () => clearTimeout(t);
+  }, [undo]);
 
   // Nº de items propios por categoría y por tipo, para los editores
   const [categoryCounts, typeCounts] = useMemo(() => {
@@ -116,11 +142,19 @@ function Vault({ user, dark, toggleTheme }) {
   };
 
   const handleDelete = async () => {
+    const item = deletingPrompt;
     try {
-      await deleteItem(deletingPrompt.id);
+      await trashItem(item.id);
       setDeletingPrompt(null);
       setViewingPrompt(null);
+      setUndo({ id: item.id, title: item.title });
     } catch { /* aviso visible */ }
+  };
+
+  const handleUndo = async () => {
+    const { id } = undo;
+    setUndo(null);
+    try { await restoreItem(id); } catch { /* aviso visible */ }
   };
 
   // El diálogo lee siempre la versión actual del item para reflejar cada cambio al instante
@@ -160,6 +194,8 @@ function Vault({ user, dark, toggleTheme }) {
         onNew={openCreate}
         onHome={goHome}
         user={user}
+        trashCount={trash.length}
+        onOpenTrash={() => setTrashOpen(true)}
         onSignOut={handleSignOut}
       />
 
@@ -175,14 +211,12 @@ function Vault({ user, dark, toggleTheme }) {
         />
 
         {loading ? (
-          <div className="flex justify-center py-24" role="status" aria-label="Cargando">
-            <div className="w-9 h-9 rounded-full border-[3px] border-lavender/30 border-t-lavender animate-spin" />
-          </div>
+          <Spinner />
         ) : prompts.length === 0 ? (
           <EmptyState onNew={openCreate} />
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-warm-400 dark:text-dark-400 text-[15px]">
+            <p className="text-warm-500 dark:text-dark-300 text-[15px]">
               No se encontraron {emptyLabel} con esos filtros.
             </p>
           </div>
@@ -208,12 +242,24 @@ function Vault({ user, dark, toggleTheme }) {
           <p className="flex-1 text-[13px] leading-snug text-danger">
             No se pudo completar la operación: {error}
           </p>
-          <button onClick={dismissError} className="shrink-0 text-warm-400 dark:text-dark-400 hover:text-warm-700 dark:hover:text-dark-100 cursor-pointer" aria-label="Cerrar aviso">
+          <button onClick={dismissError} className="shrink-0 -m-3 w-11 h-11 flex items-center justify-center text-warm-500 dark:text-dark-300 hover:text-warm-700 dark:hover:text-dark-100 cursor-pointer" aria-label="Cerrar aviso">
             <CloseIcon className="w-3.5 h-3.5" />
           </button>
         </div>
       )}
 
+      {undo && !error && (
+        <div role="status" className="fixed z-[60] left-4 right-4 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 bottom-[max(1rem,env(safe-area-inset-bottom))] sm:max-w-md flex items-center gap-3 pl-4 pr-2 py-2 rounded-xl bg-warm-800 dark:bg-dark-100 text-white dark:text-dark-900 shadow-lg">
+          <p className="flex-1 min-w-0 text-[13px] leading-snug truncate">
+            «{undo.title}» se movió a la papelera
+          </p>
+          <button onClick={handleUndo} className="shrink-0 h-11 px-3 rounded-lg text-[13px] font-semibold text-lavender dark:text-[#5B4682] hover:bg-white/10 dark:hover:bg-black/5 cursor-pointer">
+            Deshacer
+          </button>
+        </div>
+      )}
+
+      <Suspense fallback={null}>
       {/* Create modal */}
       <Modal open={createOpen} onClose={() => setCreateOpen(false)} title={typeLabels(formTypeObj).newTitle}>
         <PromptForm categories={categories} dark={dark} type={formTypeObj.id} onTypeChange={setFormType} onSave={handleCreate} onCancel={() => setCreateOpen(false)} />
@@ -235,14 +281,27 @@ function Vault({ user, dark, toggleTheme }) {
       />
 
       {/* Share dialog: specific people and/or public link */}
-      <ShareDialog
-        item={sharingItem}
-        userEmail={user.email}
-        onClose={() => setSharingId(null)}
-        onAddShare={email => addShare(sharingItem.id, email)}
-        onRemoveShare={email => removeShare(sharingItem.id, email)}
-        onSetLink={enabled => setPublicLink(sharingItem.id, enabled)}
-      />
+      {sharingItem && (
+        <ShareDialog
+          item={sharingItem}
+          userEmail={user.email}
+          onClose={() => setSharingId(null)}
+          onAddShare={email => addShare(sharingItem.id, email)}
+          onRemoveShare={email => removeShare(sharingItem.id, email)}
+          onSetLink={enabled => setPublicLink(sharingItem.id, enabled)}
+        />
+      )}
+
+      {/* Trash: restore or delete permanently */}
+      {trashOpen && (
+        <TrashDialog
+          items={trash}
+          onClose={() => setTrashOpen(false)}
+          onRestore={restoreItem}
+          onPurge={purgeItem}
+          onEmpty={emptyTrash}
+        />
+      )}
 
       {/* Delete confirmation */}
       <DeleteConfirm
@@ -253,8 +312,8 @@ function Vault({ user, dark, toggleTheme }) {
       />
 
       {/* Category editor: add, rename, delete, reorder and color */}
-      <ListEditorModal
-        open={editingCategories}
+      {editingCategories && <ListEditorModal
+        open
         onClose={() => setEditingCategories(false)}
         title="Editar categorías"
         description="Arrastra para cambiar el orden. El color se usa en los filtros, las tarjetas y el formulario."
@@ -281,11 +340,11 @@ function Vault({ user, dark, toggleTheme }) {
         canReset={prefs.hasCustomCategoryColors}
         onReset={prefs.resetCategoryColors}
         error={prefs.error}
-      />
+      />}
 
       {/* Type editor: same options; at least one type must remain */}
-      <ListEditorModal
-        open={editingTypes}
+      {editingTypes && <ListEditorModal
+        open
         onClose={() => setEditingTypes(false)}
         title="Editar tipos"
         description="Arrastra para cambiar el orden. El color se usa en los filtros, las badges y el formulario."
@@ -306,7 +365,8 @@ function Vault({ user, dark, toggleTheme }) {
         canReset={prefs.hasCustomTypeColors}
         onReset={prefs.resetTypeColors}
         error={prefs.error}
-      />
+      />}
+      </Suspense>
     </div>
   );
 }

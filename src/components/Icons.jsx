@@ -86,6 +86,15 @@ export function EditIcon({ className = 'w-3.5 h-3.5' }) {
   );
 }
 
+export function RestoreIcon({ className = 'w-3.5 h-3.5' }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+      <polyline points="3 3 3 8 8 8" />
+    </svg>
+  );
+}
+
 export function TrashIcon({ className = 'w-3.5 h-3.5' }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

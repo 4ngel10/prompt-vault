@@ -6,19 +6,26 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="Guarda, organiza y copia tus prompts favoritos." />
+    <title>Prompt Vault · Guarda y organiza tus prompts de IA</title>
+    <meta name="description" content="Prompt Vault es tu bóveda personal de prompts y skills de IA: guárdalos por categorías y tipos, cópialos con un clic y compártelos con quien tú elijas." />
+    <link rel="canonical" href="https://prompt-vault-three-xi.vercel.app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Prompt Vault" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:url" content="https://prompt-vault-three-xi.vercel.app/" />
+    <meta property="og:title" content="Prompt Vault · Guarda y organiza tus prompts de IA" />
+    <meta property="og:description" content="Tu bóveda personal de prompts y skills de IA: organízalos, cópialos con un clic y compártelos con quien tú elijas." />
+    <meta property="og:image" content="https://prompt-vault-three-xi.vercel.app/pwa-512x512.png" />
+    <meta name="twitter:card" content="summary" />
     <meta name="theme-color" content="#FFFFFF" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Prompt Vault" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <title>Prompt Vault</title>
+    <!-- Aplica el modo oscuro antes de pintar; va en un archivo propio para cumplir la CSP sin scripts inline -->
+    <script src="/theme-init.js"></script>
   </head>
   <body>
-    <script>try{if(JSON.parse(localStorage.getItem("pv-dark")))document.documentElement.classList.add("dark")}catch(e){}</script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

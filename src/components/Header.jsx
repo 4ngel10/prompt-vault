@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { LockIcon, SunIcon, MoonIcon, PlusIcon, ChevronDownIcon, BoltIcon, LogoutIcon, GoogleIcon } from './Icons';
+import { LockIcon, SunIcon, MoonIcon, PlusIcon, ChevronDownIcon, BoltIcon, LogoutIcon, GoogleIcon, TrashIcon } from './Icons';
 import { softVars, typeLabels } from '../constants';
 import { usePreferences } from '../contexts/PreferencesContext';
 
@@ -47,10 +47,10 @@ function Avatar({ url, email }) {
 }
 
 const TYPE_ICON_CLASS = 'w-5 h-5 rounded-md flex items-center justify-center bg-(--soft-bg) text-(--soft-text) dark:bg-(--soft-bg-dark) dark:text-(--soft-text-dark)';
-const menuPanelClass = 'absolute right-0 top-[46px] bg-white dark:bg-dark-700 border border-warm-200 dark:border-dark-500 rounded-xl shadow-lg py-1.5 z-30 animate-in';
+const menuPanelClass = 'absolute right-0 top-[52px] sm:top-[46px] bg-white dark:bg-dark-700 border border-warm-200 dark:border-dark-500 rounded-xl shadow-lg py-1.5 z-30 animate-in';
 const menuItemClass = 'w-full flex items-center gap-2.5 px-3.5 py-2.5 sm:py-2 text-[13px] text-warm-600 dark:text-dark-200 hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer';
 
-export default function Header({ dark, onToggleTheme, onNew, onHome, user, onSignOut }) {
+export default function Header({ dark, onToggleTheme, onNew, onHome, user, trashCount = 0, onOpenTrash, onSignOut }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const { getTypeColors, types } = usePreferences();
@@ -87,7 +87,7 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, user, onSig
       <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
         <button
           onClick={onToggleTheme}
-          className="w-[38px] h-[38px] rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 flex items-center justify-center text-warm-600 dark:text-dark-200 hover:bg-warm-100 dark:hover:bg-dark-600 transition-colors cursor-pointer"
+          className="w-11 h-11 sm:w-[38px] sm:h-[38px] rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 flex items-center justify-center text-warm-600 dark:text-dark-200 hover:bg-warm-100 dark:hover:bg-dark-600 transition-colors cursor-pointer"
           aria-label={dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
         >
           {dark ? <MoonIcon /> : <SunIcon />}
@@ -97,7 +97,7 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, user, onSig
             onClick={() => setMenuOpen(o => !o)}
             aria-haspopup="menu"
             aria-expanded={menuOpen}
-            className="flex items-center gap-1.5 h-[38px] px-3 sm:px-4 rounded-[10px] bg-lavender text-warm-800 dark:text-dark-900 text-sm font-semibold hover:brightness-95 transition cursor-pointer"
+            className="flex items-center gap-1.5 h-11 sm:h-[38px] px-3 sm:px-4 rounded-[10px] bg-lavender text-warm-800 dark:text-dark-900 text-sm font-semibold hover:brightness-95 transition cursor-pointer"
           >
             <PlusIcon />
             <span>Nuevo</span>
@@ -123,7 +123,7 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, user, onSig
             aria-haspopup="menu"
             aria-expanded={accountOpen}
             aria-label={`Cuenta: ${email}`}
-            className="w-[38px] h-[38px] rounded-full flex items-center justify-center hover:ring-2 hover:ring-lavender/60 transition cursor-pointer"
+            className="w-11 h-11 sm:w-[38px] sm:h-[38px] rounded-full flex items-center justify-center hover:ring-2 hover:ring-lavender/60 transition cursor-pointer"
           >
             <Avatar url={avatarUrl} email={email} />
           </button>
@@ -141,12 +141,25 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, user, onSig
               <div className="border-t border-warm-200 dark:border-dark-500 my-1" />
               <button
                 role="menuitem"
+                onClick={() => { setAccountOpen(false); onOpenTrash(); }}
+                className={menuItemClass}
+              >
+                <TrashIcon className="w-[15px] h-[15px]" />
+                <span className="flex-1 text-left">Papelera</span>
+                {trashCount > 0 && <span className="text-[12px] text-warm-500 dark:text-dark-300 tabular-nums">{trashCount}</span>}
+              </button>
+              <button
+                role="menuitem"
                 onClick={() => { setAccountOpen(false); onSignOut(); }}
                 className="w-full flex items-center gap-2.5 px-3.5 py-2.5 sm:py-2 text-[13px] text-danger hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
               >
                 <LogoutIcon className="w-[15px] h-[15px]" />
                 Cerrar sesión
               </button>
+              <div className="border-t border-warm-200 dark:border-dark-500 mt-1 pt-1.5 px-3.5 flex gap-3 text-[12px]">
+                <a href="/privacy.html" className="py-2 text-warm-500 dark:text-dark-300 hover:underline">Privacidad</a>
+                <a href="/aviso-legal.html" className="py-2 text-warm-500 dark:text-dark-300 hover:underline">Aviso legal</a>
+              </div>
             </div>
           )}
         </div>

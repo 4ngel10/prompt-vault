@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Los enlaces compartidos (/?s=…) no se bloquean aquí a propósito: llevan la cabecera
+# X-Robots-Tag: noindex (vercel.json), y los buscadores necesitan rastrearlos para verla.
+
+Sitemap: https://prompt-vault-three-xi.vercel.app/sitemap.xml

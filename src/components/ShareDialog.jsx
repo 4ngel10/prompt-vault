@@ -5,7 +5,7 @@ import { shareUrl } from '../constants';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const inputClass = 'flex-1 min-w-0 py-2 px-3 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none focus:border-lavender transition-colors';
+const inputClass = 'flex-1 min-w-0 py-2 px-3 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-500 dark:placeholder:text-dark-300 outline-none focus:border-lavender transition-colors';
 const sectionTitleClass = 'text-[11px] font-semibold uppercase tracking-wide text-warm-500 dark:text-dark-300 mb-1';
 const hintClass = 'text-[13px] text-warm-500 dark:text-dark-300 leading-relaxed mb-3';
 const secondaryButtonClass = 'flex items-center justify-center gap-1.5 px-4 py-2 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-white dark:bg-dark-700 text-warm-600 dark:text-dark-200 text-sm font-medium hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors disabled:opacity-50 cursor-pointer';
@@ -97,7 +97,7 @@ export default function ShareDialog({ item, userEmail, onClose, onAddShare, onRe
                   disabled={busy}
                   aria-label={`Quitar acceso a ${e}`}
                   title="Quitar acceso"
-                  className="w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-warm-400 dark:text-dark-400 hover:text-danger hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors disabled:opacity-40 cursor-pointer"
+                  className="w-11 h-11 sm:w-8 sm:h-8 shrink-0 rounded-lg flex items-center justify-center text-warm-400 dark:text-dark-400 hover:text-danger hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors disabled:opacity-40 cursor-pointer"
                 >
                   <CloseIcon className="w-3.5 h-3.5" />
                 </button>
@@ -105,7 +105,7 @@ export default function ShareDialog({ item, userEmail, onClose, onAddShare, onRe
             ))}
           </ul>
         ) : (
-          <p className="text-[13px] text-warm-400 dark:text-dark-400">Aún no lo has compartido con nadie.</p>
+          <p className="text-[13px] text-warm-500 dark:text-dark-300">Aún no lo has compartido con nadie.</p>
         )}
       </section>
 
@@ -131,11 +131,11 @@ export default function ShareDialog({ item, userEmail, onClose, onAddShare, onRe
               type="button"
               onClick={() => withBusy(() => onSetLink(false))}
               disabled={busy}
-              className="mt-3 text-[13px] font-medium text-danger hover:underline disabled:opacity-50 cursor-pointer"
+              className="mt-2 py-2 text-[13px] font-medium text-danger hover:underline disabled:opacity-50 cursor-pointer"
             >
               Desactivar enlace
             </button>
-            <p className="mt-1 text-[12px] text-warm-400 dark:text-dark-400">Si lo desactivas, el enlace deja de funcionar. Uno nuevo tendrá otra dirección.</p>
+            <p className="mt-1 text-[12px] text-warm-500 dark:text-dark-300">Si lo desactivas, el enlace deja de funcionar. Uno nuevo tendrá otra dirección.</p>
           </>
         ) : (
           <>

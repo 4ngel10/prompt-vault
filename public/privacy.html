@@ -3,29 +3,104 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Política de privacidad · Prompt-Vault</title>
-<style>body{font-family:system-ui,sans-serif;max-width:720px;margin:3rem auto;padding:0 1rem;line-height:1.6;color:#1a1a1a}h1{margin-bottom:.2em}h2{margin-top:2em}</style>
+<title>Política de privacidad · Prompt Vault</title>
+<meta name="description" content="Qué datos trata Prompt Vault, para qué, con qué base legal, quién los recibe, cuánto tiempo se conservan y cómo ejercer tus derechos." />
+<link rel="icon" href="/favicon.ico" sizes="48x48" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<style>
+:root{--bg:#FAFAF8;--text:#2D2D2D;--muted:#6B6560;--line:#ECEAE5;--link:#5B4682}
+@media (prefers-color-scheme:dark){:root{--bg:#1A1A2E;--text:#E8E8E8;--muted:#9A98AE;--line:#2E2E48;--link:#C3B1E1}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:2.5rem 1rem 4rem}
+.back{display:inline-block;padding:.6rem 0;color:var(--link);font-weight:600;text-decoration:none}
+.back:hover{text-decoration:underline}
+h1{font-size:1.75rem;line-height:1.25;margin:.75rem 0 .25rem}
+h2{font-size:1.15rem;margin:2.25rem 0 .5rem}
+.meta{color:var(--muted);margin:0 0 1.5rem}
+a{color:var(--link)}
+table{width:100%;border-collapse:collapse;margin:.5rem 0 1rem;font-size:.95rem}
+th,td{text-align:left;vertical-align:top;padding:.6rem .5rem;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600}
+.wrap{overflow-x:auto}
+ul{padding-left:1.25rem}
+li{margin:.3rem 0}
+code{font-size:.9em}
+</style>
 </head>
 <body>
+<main>
+<a class="back" href="/">← Volver a Prompt Vault</a>
 <h1>Política de privacidad</h1>
-<p><em>Última actualización: 16 de octubre de 2026</em></p>
+<p class="meta">Última actualización: 16 de octubre de 2026</p>
 
-<p>Prompt-Vault ("la app") es un proyecto personal operado por Ángel Fernández Garriga. Esta política explica qué datos se recogen cuando inicias sesión y cómo se usan.</p>
+<p>Esta política explica qué datos personales trata Prompt Vault («la app»), con qué finalidad, con qué base legal, quién los recibe, cuánto tiempo se conservan y cómo puedes ejercer tus derechos, conforme al Reglamento General de Protección de Datos (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD).</p>
 
-<h2>Datos que recogemos</h2>
-<p>Al iniciar sesión con Google, Supabase (nuestro proveedor de autenticación) recibe de Google tu dirección de correo electrónico, tu nombre público y la URL de tu foto de perfil. Esos datos se usan únicamente para crear y autenticar tu cuenta.</p>
-<p>Dentro de la app se almacenan los prompts que tú mismo decides guardar, asociados a tu cuenta.</p>
+<h2>1. Responsable del tratamiento</h2>
+<p>Ángel Fernández Garriga, titular de la app como proyecto personal. Contacto: <a href="mailto:angelfernandezgarriga@gmail.com">angelfernandezgarriga@gmail.com</a>. Más datos en el <a href="/aviso-legal.html">aviso legal</a>.</p>
 
-<h2>Cómo se usan los datos</h2>
-<p>Los datos se usan exclusivamente para prestarte el servicio: identificarte, mostrar tu nombre dentro de la app y permitirte acceder a tus propios prompts. No se comparten con terceros, no se venden y no se usan para publicidad.</p>
+<h2>2. Qué datos tratamos</h2>
+<ul>
+  <li><strong>Datos de cuenta.</strong> Tu email y tu contraseña (que Supabase guarda cifrada; nadie puede leerla). Si inicias sesión con Google, Google nos facilita tu email, tu nombre público y la URL de tu foto de perfil.</li>
+  <li><strong>Contenido que guardas.</strong> Tus prompts, skills y demás elementos, con sus títulos, categorías, tipos y colores, y los elementos que tienes en la papelera.</li>
+  <li><strong>Datos de compartir.</strong> Los emails de las personas con quienes compartes un elemento y, si lo activas, un enlace público de solo lectura.</li>
+  <li><strong>Datos técnicos.</strong> Los proveedores de infraestructura registran de forma automática la dirección IP, el navegador y la fecha de cada petición, por seguridad y para diagnosticar errores.</li>
+  <li><strong>Estadísticas de uso.</strong> Recuentos agregados de visitas (página visitada, país, tipo de dispositivo y navegador) sin cookies ni identificadores que permitan reconocerte.</li>
+</ul>
 
-<h2>Dónde se almacenan</h2>
-<p>Los datos de cuenta y los prompts se almacenan en Supabase (supabase.com). Vercel (vercel.com) aloja la aplicación web.</p>
+<h2>3. Finalidades y base legal</h2>
+<div class="wrap"><table>
+  <tr><th>Finalidad</th><th>Base legal (art. 6 RGPD)</th></tr>
+  <tr><td>Crear y gestionar tu cuenta, guardar tu contenido y mostrártelo</td><td>Ejecución del servicio que solicitas al registrarte (6.1.b)</td></tr>
+  <tr><td>Que las personas con quienes compartes vean ese elemento, y que el enlace público funcione</td><td>Ejecución del servicio, a petición tuya (6.1.b)</td></tr>
+  <tr><td>Seguridad, prevención de abusos y resolución de errores (registros técnicos)</td><td>Interés legítimo en mantener el servicio seguro (6.1.f)</td></tr>
+  <tr><td>Estadísticas agregadas para mejorar la app</td><td>Interés legítimo; no se usan cookies ni se identifica a nadie (6.1.f)</td></tr>
+</table></div>
+<p>No se toman decisiones automatizadas ni se elaboran perfiles. Los datos no se venden ni se usan para publicidad.</p>
 
-<h2>Tus derechos</h2>
-<p>Puedes solicitar en cualquier momento la eliminación de tu cuenta y de todos los datos asociados escribiendo a <a href="mailto:angelfernandezgarriga@gmail.com">angelfernandezgarriga@gmail.com</a>.</p>
+<h2>4. Destinatarios y encargados del tratamiento</h2>
+<ul>
+  <li><strong>Supabase</strong> (Supabase Inc.): autenticación y base de datos. Los datos se almacenan en servidores de la Unión Europea (Irlanda).</li>
+  <li><strong>Vercel</strong> (Vercel Inc., EE. UU.): alojamiento de la web y estadísticas de uso sin cookies.</li>
+  <li><strong>Google</strong> (Google Ireland Ltd.): solo si eliges iniciar sesión con Google, para verificar tu identidad.</li>
+  <li><strong>Las personas que tú elijas.</strong> Quien reciba un elemento compartido por email verá ese elemento y tu email como autor. Cualquiera que tenga un enlace público podrá ver ese elemento (sin tu email).</li>
+</ul>
+<p>Estos proveedores actúan como encargados del tratamiento con contratos que les obligan a proteger los datos. No se cederán datos a nadie más salvo obligación legal.</p>
 
-<h2>Contacto</h2>
-<p>Para cualquier duda sobre esta política: <a href="mailto:angelfernandezgarriga@gmail.com">angelfernandezgarriga@gmail.com</a>.</p>
+<h2>5. Transferencias internacionales</h2>
+<p>Vercel y Supabase son empresas con sede en EE. UU. y pueden acceder a datos desde allí para prestar su servicio. Esas transferencias se amparan en el Marco de Privacidad de Datos UE-EE. UU. (Data Privacy Framework) y en las cláusulas contractuales tipo aprobadas por la Comisión Europea.</p>
+
+<h2>6. Cuánto tiempo se conservan</h2>
+<ul>
+  <li>Cuenta y contenido: mientras tu cuenta exista. Si pides su eliminación, se borran en un plazo máximo de 30 días.</li>
+  <li>Elementos en la papelera: 30 días; después se borran definitivamente.</li>
+  <li>Emails de personas con quienes compartes: hasta que dejas de compartir, eliminas el elemento o eliminas tu cuenta.</li>
+  <li>Registros técnicos: durante los plazos breves que fijan los proveedores (normalmente días o pocas semanas).</li>
+</ul>
+
+<h2>7. Tus derechos</h2>
+<p>Puedes ejercer en cualquier momento tus derechos de <strong>acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad</strong> escribiendo a <a href="mailto:angelfernandezgarriga@gmail.com">angelfernandezgarriga@gmail.com</a>. Responderemos en el plazo de un mes. Gran parte de tus datos puedes consultarlos, editarlos y borrarlos directamente desde la app.</p>
+<p>Si consideras que no se han respetado tus derechos, puedes presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es">www.aepd.es</a>).</p>
+
+<h2>8. Datos de otras personas</h2>
+<p>Si compartes un elemento con el email de otra persona, ese email se guarda para que pueda acceder al elemento al iniciar sesión. No se le envía ninguna comunicación. Al hacerlo, garantizas que tienes una relación con esa persona que lo justifica. Cualquier persona cuyo email figure en la app puede pedir que se elimine escribiendo al email de contacto.</p>
+
+<h2>9. Cookies y almacenamiento local</h2>
+<p>La app <strong>no usa cookies</strong>, ni propias ni de terceros. Solo guarda en tu navegador (almacenamiento local) lo imprescindible para funcionar, por lo que no requiere consentimiento:</p>
+<div class="wrap"><table>
+  <tr><th>Nombre</th><th>Para qué</th><th>Duración</th></tr>
+  <tr><td><code>sb-…-auth-token</code></td><td>Mantener tu sesión iniciada (Supabase)</td><td>Hasta que cierras sesión</td></tr>
+  <tr><td><code>pv-dark</code></td><td>Recordar si prefieres el modo oscuro</td><td>Hasta que lo borras</td></tr>
+  <tr><td><code>pv-categories</code></td><td>Lista de categorías de versiones antiguas, usada solo para migrarla</td><td>Hasta que lo borras</td></tr>
+  <tr><td>Caché de la app (service worker)</td><td>Que la app cargue rápido y funcione como aplicación instalable</td><td>Hasta la siguiente actualización</td></tr>
+</table></div>
+<p>Las fuentes tipográficas se sirven desde el propio dominio de la app, sin conexiones a terceros. Las estadísticas de Vercel no usan cookies ni guardan nada en tu navegador.</p>
+
+<h2>10. Menores</h2>
+<p>La app no está dirigida a menores de 14 años. Si eres menor de esa edad, no crees una cuenta.</p>
+
+<h2>11. Cambios en esta política</h2>
+<p>Si esta política cambia de forma relevante, se indicará en esta página con una nueva fecha de actualización.</p>
+</main>
 </body>
 </html>

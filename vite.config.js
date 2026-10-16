@@ -29,18 +29,10 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-        ],
+        // Solo los subconjuntos latinos de la fuente; el resto se descarga si hace falta
+        globPatterns: ['**/*.{js,css,html,svg,png,ico}', '**/plus-jakarta-sans-latin*.woff2'],
+        // Las páginas estáticas no son rutas de la SPA: se sirven tal cual
+        navigateFallbackDenylist: [/\.html$/, /^\/robots\.txt$/, /^\/sitemap\.xml$/],
       },
     }),
   ],

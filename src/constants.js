@@ -123,7 +123,6 @@ export function typeLabels(type) {
     newTitle: `${f ? 'Nueva' : 'Nuevo'} ${name}`,
     editTitle: `Editar ${name}`,
     demonstrative: `${f ? 'esta' : 'este'} ${lower}`,
-    subject: `${f ? 'La' : 'El'} ${lower} será ${f ? 'eliminada' : 'eliminado'}`,
     placeholder: preset?.placeholder ?? `Escribe aquí tu ${lower}...`,
   };
 }

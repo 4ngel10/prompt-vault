@@ -62,7 +62,7 @@ export default function PromptForm({ categories, initial, type, dark, onTypeChan
           placeholder="Ej: Analizar código Python"
           value={title}
           onChange={e => setTitle(e.target.value)}
-          className="w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none focus:border-lavender transition-colors"
+          className="w-full py-2.5 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 text-base sm:text-sm text-warm-800 dark:text-dark-100 placeholder:text-warm-500 dark:placeholder:text-dark-300 outline-none focus:border-lavender transition-colors"
         />
       </div>
       <div>
@@ -106,7 +106,7 @@ export default function PromptForm({ categories, initial, type, dark, onTypeChan
           value={text}
           onChange={e => setText(e.target.value)}
           rows={7}
-          className="w-full py-3 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 font-mono text-base sm:text-[13px] text-warm-800 dark:text-dark-100 placeholder:text-warm-400 dark:placeholder:text-dark-400 outline-none resize-y leading-relaxed focus:border-lavender transition-colors"
+          className="w-full py-3 px-3.5 rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 font-mono text-base sm:text-[13px] text-warm-800 dark:text-dark-100 placeholder:text-warm-500 dark:placeholder:text-dark-300 outline-none resize-y leading-relaxed focus:border-lavender transition-colors"
         />
       </div>
       <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2.5 mt-2">

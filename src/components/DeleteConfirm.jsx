@@ -1,6 +1,7 @@
 import { TrashIcon } from './Icons';
 import Modal from './Modal';
 import { typeLabels } from '../constants';
+import { TRASH_DAYS } from '../hooks/useItems';
 
 // `type` es el tipo resuelto del item que se va a eliminar
 export default function DeleteConfirm({ open, type, onClose, onConfirm }) {
@@ -15,7 +16,7 @@ export default function DeleteConfirm({ open, type, onClose, onConfirm }) {
           ¿Eliminar {labels.demonstrative}?
         </h3>
         <p className="text-[13px] text-warm-500 dark:text-dark-300 leading-relaxed mb-6">
-          Esta acción no se puede deshacer. {labels.subject} permanentemente de tu bóveda.
+          Se moverá a la papelera, desde donde se puede restaurar durante {TRASH_DAYS} días.
         </p>
         <div className="flex gap-2.5">
           <button
@@ -26,7 +27,7 @@ export default function DeleteConfirm({ open, type, onClose, onConfirm }) {
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 py-2.5 rounded-[10px] bg-danger text-white text-sm font-semibold hover:brightness-90 transition cursor-pointer"
+            className="flex-1 py-2.5 rounded-[10px] bg-danger text-white dark:text-dark-900 text-sm font-semibold hover:brightness-90 transition cursor-pointer"
           >
             Eliminar
           </button>
