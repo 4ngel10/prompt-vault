@@ -15,12 +15,15 @@ Aplicación web personal para guardar, organizar y gestionar prompts y skills de
 - Papelera: lo eliminado se puede deshacer al momento o restaurar durante 30 días
 - Modo oscuro
 - Responsive e instalable como PWA
+- Sin cookies: solo almacenamiento técnico, fuente alojada en el propio dominio y analítica anónima
+- Política de privacidad (RGPD), aviso legal y página 404 propia
 
 ## Stack
 
 - [React 19](https://react.dev) + [Vite](https://vite.dev)
 - [Tailwind CSS v4](https://tailwindcss.com)
 - [Supabase](https://supabase.com): Auth (Google + email) y base de datos Postgres con Row Level Security
+- [vite-plugin-pwa](https://vite-pwa-org.netlify.app) para la PWA, [Fontsource](https://fontsource.org) para la fuente y [Vercel Web Analytics](https://vercel.com/docs/analytics)
 
 ## Desarrollo local
 
@@ -31,6 +34,8 @@ npm install
 cp .env.example .env   # rellena las dos variables
 npm run dev            # http://localhost:5173
 ```
+
+El servidor de desarrollo se detiene al cerrar la terminal o reiniciar el equipo; vuelve a lanzarlo con `npm run dev`.
 
 Variables de entorno (`.env`):
 
@@ -50,7 +55,10 @@ Ejecuta en el SQL Editor de Supabase, en este orden:
 5. [`supabase/sharing_v4.sql`](supabase/sharing_v4.sql): compartir por email y enlace público.
 6. [`supabase/trash_v5.sql`](supabase/trash_v5.sql): papelera (`deleted_at`); lo que está en ella deja de verse al compartir.
 
-En Supabase → Authentication → URL Configuration, añade como Redirect URLs la URL de producción y `http://localhost:5173`.
+En Supabase → Authentication → URL Configuration:
+
+- **Site URL**: la URL de producción (`https://prompt-vault-three-xi.vercel.app`). Supabase vuelve a ella cuando la URL de origen no está permitida, y es la que llevan los emails de confirmación. Si se queda en `http://localhost:3000`, el login con Google termina en una página caída.
+- **Redirect URLs**: la URL de producción y `http://localhost:5173`.
 
 En Supabase → Authentication → Providers → Email, fija la longitud mínima de contraseña en **8** (la misma que valida el formulario).
 
@@ -67,8 +75,17 @@ En Supabase → Authentication → Providers → Email, fija la longitud mínima
 
 [Vercel](https://vercel.com), con auto-deploy en cada push a `main`. Las variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` se configuran en Vercel → Settings → Environment Variables.
 
+Usa siempre la URL de producción. Vercel asigna también `prompt-vault-4ngel10.vercel.app`, protegida con el login de Vercel y fuera de las Redirect URLs de Supabase; `vercel.json` la redirige a la principal.
+
 [`vercel.json`](vercel.json) define las cabeceras de seguridad (CSP, `X-Frame-Options`, `nosniff`…), `noindex` para los enlaces compartidos y caché larga para `/assets`. Si añades un servicio externo (imágenes, APIs), amplía la CSP o el navegador lo bloqueará.
 
 La analítica es [Vercel Web Analytics](https://vercel.com/docs/analytics), sin cookies: actívala en el proyecto de Vercel → Analytics.
 
 Páginas estáticas en `public/`: [`privacy.html`](public/privacy.html), [`aviso-legal.html`](public/aviso-legal.html), [`404.html`](public/404.html), `robots.txt` y `sitemap.xml`. Si cambias de dominio, actualiza las URLs absolutas de `index.html`, `robots.txt` y `sitemap.xml`.
+
+## Diseño
+
+- [`PRODUCT.md`](PRODUCT.md): usuarios, propósito y tono del producto.
+- [`DESIGN.md`](DESIGN.md): sistema visual (colores, tipografía, componentes), con su versión estructurada en [`.impeccable/design.json`](.impeccable/design.json).
+
+Se mantienen con la skill [Impeccable](https://github.com/pbakaus/impeccable) para Claude Code. Instálala con `npx impeccable install`; su carpeta `.claude/` no se sube al repositorio.
