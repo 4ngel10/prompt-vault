@@ -1,13 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ChevronDownIcon, BoltIcon } from './Icons';
 import { ITEM_TYPES } from '../constants';
-import { useCategoryColors } from '../contexts/CategoryColorsContext';
+import { usePreferences } from '../contexts/PreferencesContext';
 import SegmentedControl from './SegmentedControl';
-
-const TYPE_OPTIONS = [
-  { value: 'prompt', label: 'Prompt' },
-  { value: 'skill', label: 'Skill', icon: <BoltIcon />, activeClass: 'bg-mint' },
-];
 
 const TEXT_PLACEHOLDERS = {
   prompt: 'Pega o escribe tu prompt aquí...',
@@ -21,7 +16,11 @@ export default function PromptForm({ categories, initial, type, dark, onTypeChan
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [text, setText] = useState('');
-  const { getColors } = useCategoryColors();
+  const { getColors, getTypeColors } = usePreferences();
+  const typeOptions = [
+    { value: 'prompt', label: 'Prompt', activeColor: getTypeColors('prompt').swatch },
+    { value: 'skill', label: 'Skill', icon: <BoltIcon />, activeColor: getTypeColors('skill').swatch },
+  ];
   const categoryColors = category ? getColors(category) : null;
   const scheme = categoryColors ? (dark ? categoryColors.dark : categoryColors.light) : null;
 
@@ -49,7 +48,7 @@ export default function PromptForm({ categories, initial, type, dark, onTypeChan
           Tipo
         </label>
         <SegmentedControl
-          options={TYPE_OPTIONS}
+          options={typeOptions}
           value={type}
           onChange={onTypeChange}
           label="Tipo"

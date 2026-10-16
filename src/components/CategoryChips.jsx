@@ -1,8 +1,8 @@
 import { EditIcon } from './Icons';
-import { useCategoryColors } from '../contexts/CategoryColorsContext';
+import { usePreferences } from '../contexts/PreferencesContext';
 
 export default function CategoryChips({ categories, active, dark, onSelect, onManage }) {
-  const { getColors } = useCategoryColors();
+  const { getColors } = usePreferences();
   const all = ['Todos', ...categories];
   return (
     <div className="flex gap-2 mb-6 sm:mb-7 overflow-x-auto sm:flex-wrap -mx-4 px-4 sm:mx-0 sm:px-0 pb-1 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

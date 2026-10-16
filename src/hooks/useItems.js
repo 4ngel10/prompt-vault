@@ -62,5 +62,10 @@ export function useItems(user) {
     setItems(prev => prev.map(i => i.isOwn && i.category === name ? { ...i, category: '' } : i));
   };
 
-  return { items, loading, error, dismissError: () => setError(null), createItem, updateItem, deleteItem, toggleShare, clearCategory };
+  const renameCategory = async (from, to) => {
+    await run(supabase.from('items').update({ category: to }).eq('user_id', user.id).eq('category', from));
+    setItems(prev => prev.map(i => i.isOwn && i.category === from ? { ...i, category: to } : i));
+  };
+
+  return { items, loading, error, dismissError: () => setError(null), createItem, updateItem, deleteItem, toggleShare, clearCategory, renameCategory };
 }

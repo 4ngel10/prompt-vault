@@ -1,9 +1,8 @@
 import { useState, useMemo } from 'react';
-import { useLocalStorage } from './hooks/useLocalStorage';
 import { useTheme } from './hooks/useTheme';
 import { useItems } from './hooks/useItems';
 import { useAuth } from './contexts/AuthContext';
-import { CATEGORIES, ITEM_TYPES, getItemType } from './constants';
+import { ITEM_TYPES, getItemType } from './constants';
 import AuthScreen from './components/AuthScreen';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
@@ -15,9 +14,8 @@ import Modal from './components/Modal';
 import PromptForm from './components/PromptForm';
 import PromptDetail from './components/PromptDetail';
 import DeleteConfirm from './components/DeleteConfirm';
-import CategoryManager from './components/CategoryManager';
-import CategoryColorsModal from './components/CategoryColorsModal';
-import { CategoryColorsProvider } from './contexts/CategoryColorsContext';
+import CustomizeModal from './components/CustomizeModal';
+import { PreferencesProvider, usePreferences } from './contexts/PreferencesContext';
 import { CloseIcon } from './components/Icons';
 
 function App() {
@@ -26,16 +24,16 @@ function App() {
 
   if (!user) return <AuthScreen dark={dark} onToggleTheme={toggleTheme} />;
   return (
-    <CategoryColorsProvider key={user.id} user={user}>
+    <PreferencesProvider key={user.id} user={user}>
       <Vault user={user} dark={dark} toggleTheme={toggleTheme} />
-    </CategoryColorsProvider>
+    </PreferencesProvider>
   );
 }
 
 function Vault({ user, dark, toggleTheme }) {
   const { signOut } = useAuth();
-  const { items: prompts, loading, error, dismissError, createItem, updateItem, deleteItem, toggleShare, clearCategory } = useItems(user);
-  const [categories, setCategories] = useLocalStorage('pv-categories', CATEGORIES);
+  const { items: prompts, loading, error, dismissError, createItem, updateItem, deleteItem, toggleShare, clearCategory, renameCategory } = useItems(user);
+  const { categories, renameCategory: renameInPrefs, deleteCategory: deleteInPrefs } = usePreferences();
   const [search, setSearch] = useState('');
   const [activeType, setActiveType] = useState('all');
   const [activeCategory, setActiveCategory] = useState('Todos');
@@ -46,10 +44,14 @@ function Vault({ user, dark, toggleTheme }) {
   const [editingPrompt, setEditingPrompt] = useState(null);
   const [viewingPrompt, setViewingPrompt] = useState(null);
   const [deletingPrompt, setDeletingPrompt] = useState(null);
-  const [managingCategories, setManagingCategories] = useState(false);
-  const [customizingColors, setCustomizingColors] = useState(false);
+  const [customizing, setCustomizing] = useState(false);
 
-  const ownPrompts = useMemo(() => prompts.filter(p => p.isOwn), [prompts]);
+  // Nº de items propios por categoría, para el editor de categorías
+  const categoryCounts = useMemo(() => {
+    const counts = {};
+    for (const p of prompts) if (p.isOwn && p.category) counts[p.category] = (counts[p.category] ?? 0) + 1;
+    return counts;
+  }, [prompts]);
 
   const filtered = useMemo(() => {
     return prompts.filter(p => {
@@ -104,16 +106,17 @@ function Vault({ user, dark, toggleTheme }) {
     try { await toggleShare(item); } catch { /* aviso visible */ }
   };
 
-  const handleAddCategory = (name) => {
-    setCategories(prev => [...prev, name]);
+  // Renombrar y eliminar tocan los items en Supabase y las preferencias; si falla, el modal lo muestra
+  const handleRenameCategory = async (from, to) => {
+    await renameCategory(from, to);
+    renameInPrefs(from, to);
+    if (activeCategory === from) setActiveCategory(to);
   };
 
   const handleDeleteCategory = async (name) => {
-    try {
-      await clearCategory(name);
-      setCategories(prev => prev.filter(c => c !== name));
-      if (activeCategory === name) setActiveCategory('Todos');
-    } catch { /* aviso visible */ }
+    await clearCategory(name);
+    deleteInPrefs(name);
+    if (activeCategory === name) setActiveCategory('Todos');
   };
 
   const handleSignOut = async () => {
@@ -129,7 +132,7 @@ function Vault({ user, dark, toggleTheme }) {
         onToggleTheme={toggleTheme}
         onNew={openCreate}
         onHome={goHome}
-        onOpenSettings={() => setCustomizingColors(true)}
+        onOpenSettings={() => setCustomizing(true)}
         user={user}
         onSignOut={handleSignOut}
       />
@@ -142,7 +145,7 @@ function Vault({ user, dark, toggleTheme }) {
           active={activeCategory}
           dark={dark}
           onSelect={setActiveCategory}
-          onManage={() => setManagingCategories(true)}
+          onManage={() => setCustomizing(true)}
         />
 
         {loading ? (
@@ -212,22 +215,14 @@ function Vault({ user, dark, toggleTheme }) {
         onConfirm={handleDelete}
       />
 
-      {/* Category manager */}
-      <CategoryManager
-        open={managingCategories}
-        onClose={() => setManagingCategories(false)}
-        categories={categories}
-        prompts={ownPrompts}
-        onAdd={handleAddCategory}
-        onDelete={handleDeleteCategory}
-      />
-
-      {/* Category colors */}
-      <CategoryColorsModal
-        open={customizingColors}
-        onClose={() => setCustomizingColors(false)}
-        categories={categories}
+      {/* Categories, order and colors */}
+      <CustomizeModal
+        open={customizing}
+        onClose={() => setCustomizing(false)}
         dark={dark}
+        counts={categoryCounts}
+        onRename={handleRenameCategory}
+        onDelete={handleDeleteCategory}
       />
     </div>
   );

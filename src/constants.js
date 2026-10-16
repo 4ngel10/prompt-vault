@@ -12,6 +12,7 @@ function tint(swatch, lightBg, lightText) {
   const [r, g, b] = [1, 3, 5].map(i => parseInt(swatch.slice(i, i + 2), 16));
   return {
     swatch,
+    rgb: `${r},${g},${b}`,
     light: { bg: lightBg, text: lightText, border: swatch },
     dark: { bg: `rgba(${r},${g},${b},0.18)`, text: swatch, border: `rgba(${r},${g},${b},0.55)` },
   };
@@ -38,6 +39,25 @@ export const DEFAULT_CATEGORY_COLORS = {
   Imagen: 'peach',
   Productividad: 'cream',
 };
+
+// Color por defecto de los tipos de item
+export const DEFAULT_TYPE_COLORS = {
+  prompt: 'lavender',
+  skill: 'mint',
+};
+
+// Variables CSS para piezas "suaves" (badges de tipo, iconos de menú) de un color de la paleta.
+// Se usan con clases como bg-(--soft-bg) dark:bg-(--soft-bg-dark) para no depender de `dark` en props.
+export function softVars(color) {
+  return {
+    '--soft-bg': `rgba(${color.rgb},0.22)`,
+    '--soft-bg-dark': `rgba(${color.rgb},0.15)`,
+    '--soft-border': `rgba(${color.rgb},0.65)`,
+    '--soft-text': color.light.text,
+    '--soft-text-dark': color.swatch,
+    '--swatch': color.swatch,
+  };
+}
 
 // Categorías creadas por el usuario: color estable a partir del nombre (mismo orden que antes)
 const HASH_KEYS = ['lavender', 'sky', 'rose', 'mint', 'peach', 'cream'];

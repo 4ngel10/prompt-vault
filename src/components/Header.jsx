@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { LockIcon, SunIcon, MoonIcon, PlusIcon, ChevronDownIcon, BoltIcon, LogoutIcon, GoogleIcon, GearIcon } from './Icons';
+import { softVars } from '../constants';
+import { usePreferences } from '../contexts/PreferencesContext';
 
 // Cierra un menú al hacer clic fuera o pulsar Escape
 function useDismiss(ref, open, close) {
@@ -44,12 +46,14 @@ function Avatar({ url, email }) {
   );
 }
 
+const TYPE_ICON_CLASS = 'w-5 h-5 rounded-md flex items-center justify-center bg-(--soft-bg) text-(--soft-text) dark:bg-(--soft-bg-dark) dark:text-(--soft-text-dark)';
 const menuPanelClass = 'absolute right-0 top-[46px] bg-white dark:bg-dark-700 border border-warm-200 dark:border-dark-500 rounded-xl shadow-lg py-1.5 z-30 animate-in';
 const menuItemClass = 'w-full flex items-center gap-2.5 px-3.5 py-2.5 sm:py-2 text-[13px] text-warm-600 dark:text-dark-200 hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer';
 
 export default function Header({ dark, onToggleTheme, onNew, onHome, onOpenSettings, user, onSignOut }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const { getTypeColors } = usePreferences();
   const menuRef = useRef(null);
   const accountRef = useRef(null);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
@@ -90,9 +94,9 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, onOpenSetti
         </button>
         <button
           onClick={onOpenSettings}
-          title="Personalizar colores"
+          title="Personalizar categorías y colores"
           className="hidden sm:flex w-[38px] h-[38px] rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 items-center justify-center text-warm-600 dark:text-dark-200 hover:bg-warm-100 dark:hover:bg-dark-600 transition-colors cursor-pointer"
-          aria-label="Personalizar colores"
+          aria-label="Personalizar categorías y colores"
         >
           <GearIcon />
         </button>
@@ -111,13 +115,13 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, onOpenSetti
           {menuOpen && (
             <div role="menu" className={`${menuPanelClass} min-w-[170px]`}>
               <button role="menuitem" onClick={() => choose('prompt')} className={menuItemClass}>
-                <span className="w-5 h-5 rounded-md bg-lavender/30 text-[#5B4682] dark:text-lavender flex items-center justify-center">
+                <span style={softVars(getTypeColors('prompt'))} className={TYPE_ICON_CLASS}>
                   <PlusIcon className="w-3 h-3" />
                 </span>
                 Nuevo Prompt
               </button>
               <button role="menuitem" onClick={() => choose('skill')} className={menuItemClass}>
-                <span className="w-5 h-5 rounded-md bg-mint/30 text-[#2E6644] dark:text-mint flex items-center justify-center">
+                <span style={softVars(getTypeColors('skill'))} className={TYPE_ICON_CLASS}>
                   <BoltIcon />
                 </span>
                 Nueva Skill
@@ -154,7 +158,7 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, onOpenSetti
                 className={menuItemClass}
               >
                 <GearIcon className="w-[15px] h-[15px]" />
-                Personalizar colores
+                Personalizar
               </button>
               <button
                 role="menuitem"

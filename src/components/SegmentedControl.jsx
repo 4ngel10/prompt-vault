@@ -14,9 +14,10 @@ export default function SegmentedControl({ options, value, onChange, label, clas
             role="radio"
             aria-checked={isActive}
             onClick={() => onChange(opt.value)}
+            style={isActive && opt.activeColor ? { background: opt.activeColor } : undefined}
             className={`flex-1 flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-lg text-[13px] font-medium whitespace-nowrap transition-colors cursor-pointer ${
               isActive
-                ? `${opt.activeClass ?? 'bg-lavender'} text-warm-800 dark:text-dark-900 font-semibold`
+                ? `${opt.activeColor ? '' : 'bg-lavender'} text-warm-800 dark:text-dark-900 font-semibold`
                 : 'text-warm-500 dark:text-dark-300 hover:bg-warm-50 dark:hover:bg-dark-600'
             }`}
           >
