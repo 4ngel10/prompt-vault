@@ -1,0 +1,662 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-16T08:14:22.360Z",
+  "title": "Design System: Prompt Vault",
+  "extensions": {
+    "colorMeta": {
+      "lavender": {
+        "role": "primary",
+        "displayName": "Lavanda Sello",
+        "canonical": "#C3B1E1",
+        "oklch": "oklch(79.2% 0.070 302.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.070 302.0)",
+          "oklch(26.4% 0.070 302.0)",
+          "oklch(37.9% 0.070 302.0)",
+          "oklch(49.3% 0.070 302.0)",
+          "oklch(60.7% 0.070 302.0)",
+          "oklch(72.1% 0.070 302.0)",
+          "oklch(83.6% 0.070 302.0)",
+          "oklch(95.0% 0.070 302.0)"
+        ]
+      },
+      "lavender-ink": {
+        "role": "primary",
+        "displayName": "Tinta Lavanda",
+        "canonical": "#5B4682",
+        "oklch": "oklch(44.4% 0.098 298.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.098 298.5)",
+          "oklch(26.4% 0.098 298.5)",
+          "oklch(37.9% 0.098 298.5)",
+          "oklch(49.3% 0.098 298.5)",
+          "oklch(60.7% 0.098 298.5)",
+          "oklch(72.1% 0.098 298.5)",
+          "oklch(83.6% 0.098 298.5)",
+          "oklch(95.0% 0.098 298.5)"
+        ]
+      },
+      "mint": {
+        "role": "secondary",
+        "displayName": "Menta Skill",
+        "canonical": "#A8D5BA",
+        "oklch": "oklch(83.4% 0.060 158.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.060 158.4)",
+          "oklch(26.4% 0.060 158.4)",
+          "oklch(37.9% 0.060 158.4)",
+          "oklch(49.3% 0.060 158.4)",
+          "oklch(60.7% 0.060 158.4)",
+          "oklch(72.1% 0.060 158.4)",
+          "oklch(83.6% 0.060 158.4)",
+          "oklch(95.0% 0.060 158.4)"
+        ]
+      },
+      "mint-ink": {
+        "role": "secondary",
+        "displayName": "Tinta Menta",
+        "canonical": "#2E6644",
+        "oklch": "oklch(46.2% 0.082 154.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.082 154.8)",
+          "oklch(26.4% 0.082 154.8)",
+          "oklch(37.9% 0.082 154.8)",
+          "oklch(49.3% 0.082 154.8)",
+          "oklch(60.7% 0.082 154.8)",
+          "oklch(72.1% 0.082 154.8)",
+          "oklch(83.6% 0.082 154.8)",
+          "oklch(95.0% 0.082 154.8)"
+        ]
+      },
+      "sky": {
+        "role": "tertiary",
+        "displayName": "Cielo Compartido",
+        "canonical": "#A7C7E7",
+        "oklch": "oklch(81.7% 0.057 248.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.057 248.5)",
+          "oklch(26.4% 0.057 248.5)",
+          "oklch(37.9% 0.057 248.5)",
+          "oklch(49.3% 0.057 248.5)",
+          "oklch(60.7% 0.057 248.5)",
+          "oklch(72.1% 0.057 248.5)",
+          "oklch(83.6% 0.057 248.5)",
+          "oklch(95.0% 0.057 248.5)"
+        ]
+      },
+      "sky-ink": {
+        "role": "tertiary",
+        "displayName": "Tinta Cielo",
+        "canonical": "#3A5F82",
+        "oklch": "oklch(47.3% 0.071 248.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.071 248.2)",
+          "oklch(26.4% 0.071 248.2)",
+          "oklch(37.9% 0.071 248.2)",
+          "oklch(49.3% 0.071 248.2)",
+          "oklch(60.7% 0.071 248.2)",
+          "oklch(72.1% 0.071 248.2)",
+          "oklch(83.6% 0.071 248.2)",
+          "oklch(95.0% 0.071 248.2)"
+        ]
+      },
+      "rose": {
+        "role": "category",
+        "displayName": "Rosa Escritura",
+        "canonical": "#F2C4CE",
+        "oklch": "oklch(86.3% 0.054 3.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.054 3.7)",
+          "oklch(26.4% 0.054 3.7)",
+          "oklch(37.9% 0.054 3.7)",
+          "oklch(49.3% 0.054 3.7)",
+          "oklch(60.7% 0.054 3.7)",
+          "oklch(72.1% 0.054 3.7)",
+          "oklch(83.6% 0.054 3.7)",
+          "oklch(95.0% 0.054 3.7)"
+        ]
+      },
+      "peach": {
+        "role": "category",
+        "displayName": "Melocotón Imagen",
+        "canonical": "#FADADD",
+        "oklch": "oklch(91.6% 0.036 11.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.036 11.4)",
+          "oklch(26.4% 0.036 11.4)",
+          "oklch(37.9% 0.036 11.4)",
+          "oklch(49.3% 0.036 11.4)",
+          "oklch(60.7% 0.036 11.4)",
+          "oklch(72.1% 0.036 11.4)",
+          "oklch(83.6% 0.036 11.4)",
+          "oklch(95.0% 0.036 11.4)"
+        ]
+      },
+      "cream": {
+        "role": "category",
+        "displayName": "Crema Productividad",
+        "canonical": "#F9E4B7",
+        "oklch": "oklch(92.5% 0.063 85.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.063 85.9)",
+          "oklch(26.4% 0.063 85.9)",
+          "oklch(37.9% 0.063 85.9)",
+          "oklch(49.3% 0.063 85.9)",
+          "oklch(60.7% 0.063 85.9)",
+          "oklch(72.1% 0.063 85.9)",
+          "oklch(83.6% 0.063 85.9)",
+          "oklch(95.0% 0.063 85.9)"
+        ]
+      },
+      "danger": {
+        "role": "danger",
+        "displayName": "Rojo Lacre",
+        "canonical": "#D94444",
+        "oklch": "oklch(60.0% 0.186 24.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.186 24.7)",
+          "oklch(26.4% 0.186 24.7)",
+          "oklch(37.9% 0.186 24.7)",
+          "oklch(49.3% 0.186 24.7)",
+          "oklch(60.7% 0.186 24.7)",
+          "oklch(72.1% 0.186 24.7)",
+          "oklch(83.6% 0.186 24.7)",
+          "oklch(95.0% 0.186 24.7)"
+        ]
+      },
+      "warm-50": {
+        "role": "neutral",
+        "displayName": "Papel Cálido",
+        "canonical": "#FAFAF8",
+        "oklch": "oklch(98.5% 0.003 106.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 106.4)",
+          "oklch(26.4% 0.003 106.4)",
+          "oklch(37.9% 0.003 106.4)",
+          "oklch(49.3% 0.003 106.4)",
+          "oklch(60.7% 0.003 106.4)",
+          "oklch(72.1% 0.003 106.4)",
+          "oklch(83.6% 0.003 106.4)",
+          "oklch(95.0% 0.003 106.4)"
+        ]
+      },
+      "warm-100": {
+        "role": "neutral",
+        "displayName": "Hueso",
+        "canonical": "#F5F4F0",
+        "oklch": "oklch(96.7% 0.005 95.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.005 95.1)",
+          "oklch(26.4% 0.005 95.1)",
+          "oklch(37.9% 0.005 95.1)",
+          "oklch(49.3% 0.005 95.1)",
+          "oklch(60.7% 0.005 95.1)",
+          "oklch(72.1% 0.005 95.1)",
+          "oklch(83.6% 0.005 95.1)",
+          "oklch(95.0% 0.005 95.1)"
+        ]
+      },
+      "warm-200": {
+        "role": "neutral",
+        "displayName": "Línea de Cuaderno",
+        "canonical": "#ECEAE5",
+        "oklch": "oklch(93.7% 0.007 88.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.007 88.6)",
+          "oklch(26.4% 0.007 88.6)",
+          "oklch(37.9% 0.007 88.6)",
+          "oklch(49.3% 0.007 88.6)",
+          "oklch(60.7% 0.007 88.6)",
+          "oklch(72.1% 0.007 88.6)",
+          "oklch(83.6% 0.007 88.6)",
+          "oklch(95.0% 0.007 88.6)"
+        ]
+      },
+      "warm-400": {
+        "role": "neutral",
+        "displayName": "Grafito Claro",
+        "canonical": "#9B9690",
+        "oklch": "oklch(67.6% 0.011 72.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.011 72.6)",
+          "oklch(26.4% 0.011 72.6)",
+          "oklch(37.9% 0.011 72.6)",
+          "oklch(49.3% 0.011 72.6)",
+          "oklch(60.7% 0.011 72.6)",
+          "oklch(72.1% 0.011 72.6)",
+          "oklch(83.6% 0.011 72.6)",
+          "oklch(95.0% 0.011 72.6)"
+        ]
+      },
+      "warm-500": {
+        "role": "neutral",
+        "displayName": "Grafito Suave",
+        "canonical": "#6B6560",
+        "oklch": "oklch(51.1% 0.011 62.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.011 62.4)",
+          "oklch(26.4% 0.011 62.4)",
+          "oklch(37.9% 0.011 62.4)",
+          "oklch(49.3% 0.011 62.4)",
+          "oklch(60.7% 0.011 62.4)",
+          "oklch(72.1% 0.011 62.4)",
+          "oklch(83.6% 0.011 62.4)",
+          "oklch(95.0% 0.011 62.4)"
+        ]
+      },
+      "warm-600": {
+        "role": "neutral",
+        "displayName": "Grafito",
+        "canonical": "#5A5550",
+        "oklch": "oklch(45.3% 0.010 67.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.010 67.6)",
+          "oklch(26.4% 0.010 67.6)",
+          "oklch(37.9% 0.010 67.6)",
+          "oklch(49.3% 0.010 67.6)",
+          "oklch(60.7% 0.010 67.6)",
+          "oklch(72.1% 0.010 67.6)",
+          "oklch(83.6% 0.010 67.6)",
+          "oklch(95.0% 0.010 67.6)"
+        ]
+      },
+      "warm-700": {
+        "role": "neutral",
+        "displayName": "Grafito Profundo",
+        "canonical": "#3A3835",
+        "oklch": "oklch(34.2% 0.006 78.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.006 78.3)",
+          "oklch(26.4% 0.006 78.3)",
+          "oklch(37.9% 0.006 78.3)",
+          "oklch(49.3% 0.006 78.3)",
+          "oklch(60.7% 0.006 78.3)",
+          "oklch(72.1% 0.006 78.3)",
+          "oklch(83.6% 0.006 78.3)",
+          "oklch(95.0% 0.006 78.3)"
+        ]
+      },
+      "warm-800": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "#2D2D2D",
+        "oklch": "oklch(29.7% 0.000 0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.000 0)",
+          "oklch(26.4% 0.000 0)",
+          "oklch(37.9% 0.000 0)",
+          "oklch(49.3% 0.000 0)",
+          "oklch(60.7% 0.000 0)",
+          "oklch(72.1% 0.000 0)",
+          "oklch(83.6% 0.000 0)",
+          "oklch(95.0% 0.000 0)"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Papel Blanco",
+        "canonical": "#FFFFFF",
+        "oklch": "oklch(100.0% 0.000 0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.000 0)",
+          "oklch(26.4% 0.000 0)",
+          "oklch(37.9% 0.000 0)",
+          "oklch(49.3% 0.000 0)",
+          "oklch(60.7% 0.000 0)",
+          "oklch(72.1% 0.000 0)",
+          "oklch(83.6% 0.000 0)",
+          "oklch(95.0% 0.000 0)"
+        ]
+      },
+      "dark-900": {
+        "role": "neutral",
+        "displayName": "Noche Profunda",
+        "canonical": "#1A1A2E",
+        "oklch": "oklch(22.8% 0.038 282.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.038 282.9)",
+          "oklch(26.4% 0.038 282.9)",
+          "oklch(37.9% 0.038 282.9)",
+          "oklch(49.3% 0.038 282.9)",
+          "oklch(60.7% 0.038 282.9)",
+          "oklch(72.1% 0.038 282.9)",
+          "oklch(83.6% 0.038 282.9)",
+          "oklch(95.0% 0.038 282.9)"
+        ]
+      },
+      "dark-800": {
+        "role": "neutral",
+        "displayName": "Noche",
+        "canonical": "#1E1E34",
+        "oklch": "oklch(24.7% 0.041 282.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.041 282.9)",
+          "oklch(26.4% 0.041 282.9)",
+          "oklch(37.9% 0.041 282.9)",
+          "oklch(49.3% 0.041 282.9)",
+          "oklch(60.7% 0.041 282.9)",
+          "oklch(72.1% 0.041 282.9)",
+          "oklch(83.6% 0.041 282.9)",
+          "oklch(95.0% 0.041 282.9)"
+        ]
+      },
+      "dark-700": {
+        "role": "neutral",
+        "displayName": "Pizarra",
+        "canonical": "#252540",
+        "oklch": "oklch(27.8% 0.049 282.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.049 282.7)",
+          "oklch(26.4% 0.049 282.7)",
+          "oklch(37.9% 0.049 282.7)",
+          "oklch(49.3% 0.049 282.7)",
+          "oklch(60.7% 0.049 282.7)",
+          "oklch(72.1% 0.049 282.7)",
+          "oklch(83.6% 0.049 282.7)",
+          "oklch(95.0% 0.049 282.7)"
+        ]
+      },
+      "dark-600": {
+        "role": "neutral",
+        "displayName": "Pizarra Clara",
+        "canonical": "#2E2E48",
+        "oklch": "oklch(31.4% 0.046 283.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.046 283.4)",
+          "oklch(26.4% 0.046 283.4)",
+          "oklch(37.9% 0.046 283.4)",
+          "oklch(49.3% 0.046 283.4)",
+          "oklch(60.7% 0.046 283.4)",
+          "oklch(72.1% 0.046 283.4)",
+          "oklch(83.6% 0.046 283.4)",
+          "oklch(95.0% 0.046 283.4)"
+        ]
+      },
+      "dark-500": {
+        "role": "neutral",
+        "displayName": "Borde Noche",
+        "canonical": "#3A3A58",
+        "oklch": "oklch(36.2% 0.051 283.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.051 283.5)",
+          "oklch(26.4% 0.051 283.5)",
+          "oklch(37.9% 0.051 283.5)",
+          "oklch(49.3% 0.051 283.5)",
+          "oklch(60.7% 0.051 283.5)",
+          "oklch(72.1% 0.051 283.5)",
+          "oklch(83.6% 0.051 283.5)",
+          "oklch(95.0% 0.051 283.5)"
+        ]
+      },
+      "dark-400": {
+        "role": "neutral",
+        "displayName": "Niebla Oscura",
+        "canonical": "#7A7890",
+        "oklch": "oklch(58.3% 0.036 289.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.036 289.0)",
+          "oklch(26.4% 0.036 289.0)",
+          "oklch(37.9% 0.036 289.0)",
+          "oklch(49.3% 0.036 289.0)",
+          "oklch(60.7% 0.036 289.0)",
+          "oklch(72.1% 0.036 289.0)",
+          "oklch(83.6% 0.036 289.0)",
+          "oklch(95.0% 0.036 289.0)"
+        ]
+      },
+      "dark-300": {
+        "role": "neutral",
+        "displayName": "Niebla",
+        "canonical": "#9A98AE",
+        "oklch": "oklch(68.9% 0.032 289.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.032 289.7)",
+          "oklch(26.4% 0.032 289.7)",
+          "oklch(37.9% 0.032 289.7)",
+          "oklch(49.3% 0.032 289.7)",
+          "oklch(60.7% 0.032 289.7)",
+          "oklch(72.1% 0.032 289.7)",
+          "oklch(83.6% 0.032 289.7)",
+          "oklch(95.0% 0.032 289.7)"
+        ]
+      },
+      "dark-200": {
+        "role": "neutral",
+        "displayName": "Niebla Clara",
+        "canonical": "#B0ACA6",
+        "oklch": "oklch(74.6% 0.010 78.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.010 78.3)",
+          "oklch(26.4% 0.010 78.3)",
+          "oklch(37.9% 0.010 78.3)",
+          "oklch(49.3% 0.010 78.3)",
+          "oklch(60.7% 0.010 78.3)",
+          "oklch(72.1% 0.010 78.3)",
+          "oklch(83.6% 0.010 78.3)",
+          "oklch(95.0% 0.010 78.3)"
+        ]
+      },
+      "dark-100": {
+        "role": "neutral",
+        "displayName": "Niebla Blanca",
+        "canonical": "#E8E8E8",
+        "oklch": "oklch(93.1% 0.000 0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.000 0)",
+          "oklch(26.4% 0.000 0)",
+          "oklch(37.9% 0.000 0)",
+          "oklch(49.3% 0.000 0)",
+          "oklch(60.7% 0.000 0)",
+          "oklch(72.1% 0.000 0)",
+          "oklch(83.6% 0.000 0)",
+          "oklch(95.0% 0.000 0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Títulos de pantalla completa: estado vacío y login."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Título del item en el detalle y nombre de la app en el header."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Título de cada tarjeta y botones grandes."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Extractos, etiquetas de campo, menús y textos de apoyo."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Badges de tipo en mayúsculas (PROMPT, SKILL)."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Texto completo del prompt o skill: lo que se copia."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-hover",
+        "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "purpose": "Hover de tarjeta en modo claro."
+      },
+      {
+        "name": "floating",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Menús desplegables y avisos."
+      },
+      {
+        "name": "modal",
+        "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+        "purpose": "Modales sobre fondo oscurecido y desenfocado."
+      }
+    ],
+    "motion": [
+      {
+        "name": "animate-in",
+        "value": "0.2s ease-out; from opacity 0, scale(0.95) translateY(8px)",
+        "purpose": "Entrada de modales y menús desplegables."
+      },
+      {
+        "name": "color-transition",
+        "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Hover y foco de botones, chips y campos."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal de cada vista (Guardar, Iniciar sesión, Nuevo). Uno por vista.",
+      "html": "<button class=\"ds-btn-primary\">Guardar</button>",
+      "css": ".ds-btn-primary { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #C3B1E1; color: #2D2D2D; font-size: 14px; font-weight: 600; padding: 10px 24px; border: none; border-radius: 10px; cursor: pointer; transition: filter 0.15s; } .ds-btn-primary:hover { filter: brightness(0.95); } .ds-btn-primary:focus-visible { outline: 2px solid #5B4682; outline-offset: 2px; } .ds-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acciones secundarias como Cancelar o Editar.",
+      "html": "<button class=\"ds-btn-secondary\">Cancelar</button>",
+      "css": ".ds-btn-secondary { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #FFFFFF; color: #6B6560; font-size: 14px; font-weight: 500; padding: 10px 20px; border: 1px solid #ECEAE5; border-radius: 10px; cursor: pointer; transition: background-color 0.15s; } .ds-btn-secondary:hover { background: #FAFAF8; } .ds-btn-secondary:focus-visible { outline: 2px solid #C3B1E1; outline-offset: 2px; }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Confirmación de acciones destructivas (Eliminar).",
+      "html": "<button class=\"ds-btn-danger\">Eliminar</button>",
+      "css": ".ds-btn-danger { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #D94444; color: #FFFFFF; font-size: 14px; font-weight: 600; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer; transition: filter 0.15s; } .ds-btn-danger:hover { filter: brightness(0.9); } .ds-btn-danger:focus-visible { outline: 2px solid #D94444; outline-offset: 2px; }"
+    },
+    {
+      "name": "Search Input",
+      "kind": "input",
+      "refersTo": "search-input",
+      "description": "Buscador principal de prompts y skills, con lupa a la izquierda.",
+      "html": "<label class=\"ds-search\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/></svg><input type=\"search\" placeholder=\"Buscar prompts y skills...\" /></label>",
+      "css": ".ds-search { position: relative; display: block; width: 320px; } .ds-search svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: #9B9690; } .ds-search input { width: 100%; box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 14px; color: #2D2D2D; background: #FFFFFF; padding: 14px 16px 14px 44px; border: 1px solid #ECEAE5; border-radius: 12px; outline: none; transition: border-color 0.15s; } .ds-search input::placeholder { color: #9B9690; } .ds-search input:focus-visible { border-color: #C3B1E1; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de formulario con etiqueta; foco con borde lavanda.",
+      "html": "<label class=\"ds-field\"><span>Título</span><input type=\"text\" placeholder=\"Ej: Analizar código Python\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; width: 300px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; } .ds-field span { font-size: 13px; font-weight: 600; color: #5A5550; } .ds-field input { font-family: inherit; font-size: 14px; color: #2D2D2D; background: #FAFAF8; padding: 10px 14px; border: 1px solid #ECEAE5; border-radius: 10px; outline: none; transition: border-color 0.15s; } .ds-field input::placeholder { color: #9B9690; } .ds-field input:focus-visible { border-color: #C3B1E1; }"
+    },
+    {
+      "name": "Category Chips",
+      "kind": "chip",
+      "refersTo": "chip-active",
+      "description": "Filtro por categoría: píldoras; la activa en lavanda.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip ds-chip-active\">Todos</button><button class=\"ds-chip\">Código</button><button class=\"ds-chip\">Escritura</button></div>",
+      "css": ".ds-chips { display: flex; gap: 8px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; } .ds-chip { font-family: inherit; font-size: 13px; font-weight: 500; color: #6B6560; background: #FFFFFF; padding: 6px 16px; border: 1px solid #ECEAE5; border-radius: 9999px; cursor: pointer; transition: border-color 0.15s; } .ds-chip:hover { border-color: #C3B1E1; } .ds-chip:focus-visible { outline: 2px solid #C3B1E1; outline-offset: 2px; } .ds-chip-active { background: #C3B1E1; color: #2D2D2D; font-weight: 600; border-color: transparent; }"
+    },
+    {
+      "name": "Type Filter",
+      "kind": "custom",
+      "refersTo": "chip-active",
+      "description": "Control segmentado Todos / Prompts / Skills; \"Skills\" activo en menta con rayo.",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\"><button role=\"radio\" aria-checked=\"false\">Todos</button><button role=\"radio\" aria-checked=\"false\">Prompts</button><button role=\"radio\" aria-checked=\"true\" class=\"ds-seg-skill\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"/></svg>Skills</button></div>",
+      "css": ".ds-seg { display: inline-flex; gap: 4px; padding: 4px; background: #FFFFFF; border: 1px solid #ECEAE5; border-radius: 12px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; } .ds-seg button { display: flex; align-items: center; gap: 6px; font-family: inherit; font-size: 13px; font-weight: 500; color: #6B6560; background: transparent; padding: 6px 16px; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.15s; } .ds-seg button:hover { background: #FAFAF8; } .ds-seg button:focus-visible { outline: 2px solid #C3B1E1; outline-offset: 1px; } .ds-seg button svg { width: 12px; height: 12px; } .ds-seg button[aria-checked=\"true\"] { background: #C3B1E1; color: #2D2D2D; font-weight: 600; } .ds-seg button.ds-seg-skill[aria-checked=\"true\"] { background: #A8D5BA; }"
+    },
+    {
+      "name": "Item Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Tarjeta de un prompt o skill: título, extracto de 3 líneas y badges de tipo, categoría y compartido.",
+      "html": "<article class=\"ds-card\"><h3>Experto en Python</h3><p>Actúa como un desarrollador senior experto en Python con más de 10 años de experiencia. Dominas la biblioteca estándar, el tipado estático, asyncio y testing con pytest.</p><div class=\"ds-badges\"><span class=\"ds-badge-type ds-badge-skill\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"/></svg>Skill</span><span class=\"ds-badge-cat\">Código</span><span class=\"ds-badge-shared\">Compartido</span></div></article>",
+      "css": ".ds-card { box-sizing: border-box; width: 340px; display: flex; flex-direction: column; gap: 10px; padding: 20px; background: #FFFFFF; border: 1px solid #ECEAE5; border-radius: 14px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; cursor: pointer; transition: box-shadow 0.15s; } .ds-card:hover { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); } .ds-card:focus-visible { outline: 2px solid #C3B1E1; outline-offset: 2px; } .ds-card h3 { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.375; color: #2D2D2D; } .ds-card p { margin: 0; font-size: 13px; line-height: 1.625; color: #6B6560; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; } .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; } .ds-badge-type { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border: 1px solid; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.025em; } .ds-badge-type svg { width: 12px; height: 12px; } .ds-badge-skill { background: rgb(168 213 186 / 0.25); border-color: rgb(168 213 186 / 0.7); color: #2E6644; } .ds-badge-cat { padding: 4px 10px; border-radius: 10px; font-size: 12px; font-weight: 500; background: #DBE9F6; color: #3A5F82; } .ds-badge-shared { padding: 3px 8px; border: 1px solid rgb(167 199 231 / 0.7); border-radius: 10px; font-size: 11px; font-weight: 500; background: rgb(167 199 231 / 0.2); color: #3A5F82; }"
+    },
+    {
+      "name": "Header",
+      "kind": "nav",
+      "refersTo": "button-icon",
+      "description": "Barra superior: marca a la izquierda; tema, \"Nuevo\" y avatar a la derecha.",
+      "html": "<header class=\"ds-header\"><span class=\"ds-brand\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#C3B1E1\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/></svg>Prompt Vault</span><div class=\"ds-actions\"><button class=\"ds-icon\" aria-label=\"Tema\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"5\"/></svg></button><button class=\"ds-new\">+ Nuevo</button><span class=\"ds-avatar\">AF</span></div></header>",
+      "css": ".ds-header { box-sizing: border-box; width: 640px; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: #FFFFFF; border-bottom: 1px solid #ECEAE5; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; } .ds-brand { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 700; letter-spacing: -0.025em; color: #2D2D2D; } .ds-brand svg { width: 24px; height: 24px; } .ds-actions { display: flex; align-items: center; gap: 10px; } .ds-icon { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: #FAFAF8; color: #5A5550; border: 1px solid #ECEAE5; border-radius: 10px; cursor: pointer; transition: background-color 0.15s; } .ds-icon:hover { background: #F5F4F0; } .ds-icon:focus-visible, .ds-new:focus-visible { outline: 2px solid #C3B1E1; outline-offset: 2px; } .ds-icon svg { width: 17px; height: 17px; } .ds-new { height: 38px; padding: 0 16px; font-family: inherit; font-size: 14px; font-weight: 600; background: #C3B1E1; color: #2D2D2D; border: none; border-radius: 10px; cursor: pointer; transition: filter 0.15s; } .ds-new:hover { filter: brightness(0.95); } .ds-avatar { width: 34px; height: 34px; border-radius: 9999px; background: #C3B1E1; color: #2D2D2D; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }"
+    },
+    {
+      "name": "Dropdown Menu",
+      "kind": "custom",
+      "refersTo": "menu",
+      "description": "Menú flotante (tres puntos, Nuevo, cuenta); la acción destructiva en rojo al final, tras un separador.",
+      "html": "<div class=\"ds-menu\" role=\"menu\"><button role=\"menuitem\">Copiar</button><button role=\"menuitem\">Editar</button><button role=\"menuitem\">Compartir</button><hr/><button role=\"menuitem\" class=\"ds-menu-danger\">Eliminar</button></div>",
+      "css": ".ds-menu { width: 200px; display: flex; flex-direction: column; padding: 6px 0; background: #FFFFFF; border: 1px solid #ECEAE5; border-radius: 12px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; } .ds-menu button { text-align: left; font-family: inherit; font-size: 13px; color: #5A5550; background: transparent; padding: 8px 14px; border: none; cursor: pointer; transition: background-color 0.15s; } .ds-menu button:hover, .ds-menu button:focus-visible { background: #FAFAF8; outline: none; } .ds-menu hr { border: none; border-top: 1px solid #ECEAE5; margin: 4px 0; } .ds-menu .ds-menu-danger { color: #D94444; } .ds-menu .ds-menu-danger:hover { background: #FEF2F2; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Cuaderno de Conjuros",
+    "overview": "Prompt Vault es un cuaderno donde cada prompt y cada skill es una fórmula escrita con cuidado, guardada para invocarla en el momento justo. La magia está en el contenido, no en la interfaz: la página es papel cálido y ordenado, las fórmulas se leen en tipografía monoespaciada como si estuvieran transcritas a mano, y el color pastel funciona como las cintas y pestañas de un cuaderno bien organizado: marca, clasifica y se aparta.\n\nEl carácter es **ordenado y preciso**. La densidad es media: tarjetas con aire suficiente para leer tres líneas de cada fórmula, pero una cuadrícula de hasta tres columnas para recorrer la colección de un vistazo. Cada color tiene un trabajo concreto (tipo, categoría, estado compartido, acción principal) y nada es decorativo. El modo oscuro cambia el papel por tinta azul noche sin cambiar la lógica: los pasteles se convierten en luz tenue sobre fondo profundo.\n\nSe rechazan explícitamente los **colores saturados** y el **exceso de decoración**: ni tonos chillones, ni ilustraciones, emojis o adornos que compitan con el texto de las fórmulas.",
+    "keyCharacteristics": [
+      "Neutros cálidos (papel) en claro; azul tinta en oscuro.",
+      "Pasteles solo como código de información: lavanda = acción y prompt, menta = skill, cielo = compartido.",
+      "Bordes finos de 1px como estructura; sombras solo para capas superpuestas o en respuesta a hover.",
+      "Una sola familia sans (Plus Jakarta Sans) para la interfaz y monoespaciada para el texto de las fórmulas.",
+      "Esquinas suaves y consistentes (10–16px); píldoras solo para filtros."
+    ],
+    "rules": [
+      {
+        "name": "The Ribbon Rule",
+        "body": "Cada pastel tiene un significado (acción/prompt, skill, compartido, categoría). Si un color no clasifica ni indica una acción, no se usa.",
+        "section": "colors"
+      },
+      {
+        "name": "The Powder-Only Rule",
+        "body": "Ningún color de la interfaz supera la saturación de los pasteles de la paleta; el único tono intenso permitido es el rojo de peligro.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink-on-Pastel Rule",
+        "body": "El texto sobre un relleno pastel es siempre tinta oscura (warm-800 en claro, dark-900 en oscuro), nunca blanco.",
+        "section": "colors"
+      },
+      {
+        "name": "The Formula-in-Mono Rule",
+        "body": "La monoespaciada se reserva para el texto del item (lo que se copia). Nunca para etiquetas, botones ni títulos.",
+        "section": "typography"
+      },
+      {
+        "name": "The 16px Input Rule",
+        "body": "Los campos de texto usan 16px en móvil (13–14px en escritorio) para que iOS no haga zoom al enfocarlos.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-at-Rest Rule",
+        "body": "En reposo nada tiene sombra salvo lo que flota (menús, modales, avisos). La jerarquía de la página se construye con bordes y tono.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** asignar cada pastel a un único significado: lavanda para acción y prompt, menta para skill, cielo para compartido.",
+      "**Do** mostrar el badge de tipo en todas las tarjetas y en el detalle, para que un prompt y una skill nunca se confundan.",
+      "**Do** usar texto Tinta (warm-800 / dark-900) sobre cualquier relleno pastel.",
+      "**Do** separar superficies con bordes de 1px y cambio de tono; guardar la sombra para lo que flota.",
+      "**Do** escribir el texto del item en monoespaciada de 13px con los saltos de línea preservados.",
+      "**Do** probar cada componente en claro y en oscuro: cada token neutro tiene su pareja dark-*."
+    ],
+    "donts": [
+      "**Don't** introducir colores más saturados que los pasteles de la paleta; el rojo de peligro es la única excepción y solo para acciones destructivas o errores.",
+      "**Don't** añadir ilustraciones, emojis decorativos, patrones de fondo ni adornos que compitan con el texto de los items.",
+      "**Don't** usar texto blanco sobre lavanda, menta o cielo.",
+      "**Don't** poner sombras en tarjetas o campos en reposo.",
+      "**Don't** usar la monoespaciada para etiquetas, botones o títulos."
+    ]
+  }
+}

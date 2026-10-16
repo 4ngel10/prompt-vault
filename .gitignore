@@ -30,3 +30,7 @@ dist-ssr
 
 # Credenciales OAuth de Google
 client_secret_*.json
+
+# Herramientas locales de Claude Code e Impeccable (se reinstalan con `npx impeccable install`)
+.claude/
+.impeccable/hook.cache.json
