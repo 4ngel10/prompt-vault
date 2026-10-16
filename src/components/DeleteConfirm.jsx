@@ -1,7 +1,9 @@
 import { TrashIcon } from './Icons';
 import Modal from './Modal';
+import { ITEM_TYPES } from '../constants';
 
-export default function DeleteConfirm({ open, onClose, onConfirm }) {
+export default function DeleteConfirm({ open, type = 'prompt', onClose, onConfirm }) {
+  const labels = ITEM_TYPES[type];
   return (
     <Modal open={open} onClose={onClose} title="" width="max-w-sm">
       <div className="-mt-6 text-center sm:pt-0 pt-2">
@@ -9,10 +11,10 @@ export default function DeleteConfirm({ open, onClose, onConfirm }) {
           <TrashIcon className="w-5 h-5 text-danger" />
         </div>
         <h3 className="text-base font-bold text-warm-800 dark:text-dark-100 mb-2">
-          ¿Eliminar este prompt?
+          ¿Eliminar {labels.demonstrative}?
         </h3>
         <p className="text-[13px] text-warm-500 dark:text-dark-300 leading-relaxed mb-6">
-          Esta acción no se puede deshacer. El prompt será eliminado permanentemente de tu bóveda.
+          Esta acción no se puede deshacer. {labels.subject} permanentemente de tu bóveda.
         </p>
         <div className="flex gap-2.5">
           <button

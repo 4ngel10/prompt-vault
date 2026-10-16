@@ -1,7 +1,19 @@
 import { useState, useEffect } from 'react';
-import { ChevronDownIcon } from './Icons';
+import { ChevronDownIcon, BoltIcon } from './Icons';
+import { ITEM_TYPES } from '../constants';
+import SegmentedControl from './SegmentedControl';
 
-export default function PromptForm({ categories, initial, onSave, onCancel }) {
+const TYPE_OPTIONS = [
+  { value: 'prompt', label: 'Prompt' },
+  { value: 'skill', label: 'Skill', icon: <BoltIcon />, activeClass: 'bg-mint' },
+];
+
+const TEXT_PLACEHOLDERS = {
+  prompt: 'Pega o escribe tu prompt aquí...',
+  skill: 'Describe tu skill aquí...',
+};
+
+export default function PromptForm({ categories, initial, type, onTypeChange, onSave, onCancel }) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [text, setText] = useState('');
@@ -20,11 +32,23 @@ export default function PromptForm({ categories, initial, onSave, onCancel }) {
 
   const handleSubmit = () => {
     if (!title.trim() || !category || !text.trim()) return;
-    onSave({ title: title.trim(), category, text: text.trim() });
+    onSave({ title: title.trim(), category, text: text.trim(), type });
   };
 
   return (
     <div className="flex flex-col gap-4">
+      <div>
+        <label className="block text-[13px] font-semibold text-warm-600 dark:text-dark-300 mb-1.5">
+          Tipo
+        </label>
+        <SegmentedControl
+          options={TYPE_OPTIONS}
+          value={type}
+          onChange={onTypeChange}
+          label="Tipo"
+          className="w-full"
+        />
+      </div>
       <div>
         <label className="block text-[13px] font-semibold text-warm-600 dark:text-dark-300 mb-1.5">
           Título
@@ -57,10 +81,10 @@ export default function PromptForm({ categories, initial, onSave, onCancel }) {
       </div>
       <div>
         <label className="block text-[13px] font-semibold text-warm-600 dark:text-dark-300 mb-1.5">
-          Prompt
+          {ITEM_TYPES[type].label}
         </label>
         <textarea
-          placeholder="Pega o escribe tu prompt aquí..."
+          placeholder={TEXT_PLACEHOLDERS[type]}
           value={text}
           onChange={e => setText(e.target.value)}
           rows={7}

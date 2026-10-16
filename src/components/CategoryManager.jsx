@@ -61,7 +61,7 @@ export default function CategoryManager({ open, onClose, categories, prompts, on
               {isConfirming ? (
                 <>
                   <span className="text-[13px] text-warm-600 dark:text-dark-200 leading-snug">
-                    ¿Eliminar <b>{cat}</b>?{count > 0 && ` ${count} prompt${count > 1 ? 's quedarán' : ' quedará'} sin categoría.`}
+                    ¿Eliminar <b>{cat}</b>?{count > 0 && ` ${count} elemento${count > 1 ? 's quedarán' : ' quedará'} sin categoría.`}
                   </span>
                   <div className="flex gap-1.5 shrink-0">
                     <button

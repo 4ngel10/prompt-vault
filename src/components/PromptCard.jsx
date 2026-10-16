@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { DotsIcon, EditIcon, TrashIcon } from './Icons';
-import { getCategoryColors } from '../constants';
+import { getCategoryColors, getItemType } from '../constants';
+import TypeBadge from './TypeBadge';
 
 export default function PromptCard({ prompt, dark, onEdit, onDelete, onClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -56,12 +57,15 @@ export default function PromptCard({ prompt, dark, onEdit, onDelete, onClick }) 
       <p className="text-[13px] text-warm-500 dark:text-dark-300 leading-relaxed line-clamp-3">
         {prompt.text}
       </p>
-      <span
-        className="self-start px-2.5 py-1 rounded-[10px] text-xs font-medium"
-        style={{ background: scheme.bg, color: scheme.text }}
-      >
-        {prompt.category || 'Sin categoría'}
-      </span>
+      <div className="flex flex-wrap items-center gap-1.5">
+        <TypeBadge type={getItemType(prompt)} />
+        <span
+          className="px-2.5 py-1 rounded-[10px] text-xs font-medium"
+          style={{ background: scheme.bg, color: scheme.text }}
+        >
+          {prompt.category || 'Sin categoría'}
+        </span>
+      </div>
     </div>
   );
 }

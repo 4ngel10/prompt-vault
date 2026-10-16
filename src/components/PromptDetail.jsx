@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { getCategoryColors } from '../constants';
+import { getCategoryColors, getItemType } from '../constants';
+import TypeBadge from './TypeBadge';
 import { CopyIcon, EditIcon, TrashIcon, CheckIcon } from './Icons';
 import Modal from './Modal';
 
@@ -26,12 +27,15 @@ export default function PromptDetail({ prompt, dark, onClose, onEdit, onDelete }
           <h2 className="text-[17px] sm:text-[19px] font-bold leading-snug pr-10 break-words text-warm-800 dark:text-dark-100">
             {prompt.title}
           </h2>
-          <span
-            className="self-start px-2.5 py-1 rounded-[10px] text-xs font-medium"
-            style={{ background: scheme.bg, color: scheme.text }}
-          >
-            {prompt.category || 'Sin categoría'}
-          </span>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <TypeBadge type={getItemType(prompt)} />
+            <span
+              className="px-2.5 py-1 rounded-[10px] text-xs font-medium"
+              style={{ background: scheme.bg, color: scheme.text }}
+            >
+              {prompt.category || 'Sin categoría'}
+            </span>
+          </div>
         </div>
 
         <div className="bg-warm-50 dark:bg-dark-700 border border-warm-200 dark:border-dark-500 rounded-xl p-3.5 sm:p-4 mb-5 max-h-[45dvh] overflow-y-auto">

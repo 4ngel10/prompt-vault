@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useTheme } from './hooks/useTheme';
-import { SAMPLE_PROMPTS, CATEGORIES } from './constants';
+import { SAMPLE_PROMPTS, CATEGORIES, ITEM_TYPES, getItemType } from './constants';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
+import TypeFilter from './components/TypeFilter';
 import CategoryChips from './components/CategoryChips';
 import PromptCard from './components/PromptCard';
 import EmptyState from './components/EmptyState';
@@ -18,10 +19,12 @@ function App() {
   const [prompts, setPrompts] = useLocalStorage('pv-prompts', SAMPLE_PROMPTS);
   const [categories, setCategories] = useLocalStorage('pv-categories', CATEGORIES);
   const [search, setSearch] = useState('');
+  const [activeType, setActiveType] = useState('all');
   const [activeCategory, setActiveCategory] = useState('Todos');
 
   // Modal states
   const [createOpen, setCreateOpen] = useState(false);
+  const [formType, setFormType] = useState('prompt');
   const [editingPrompt, setEditingPrompt] = useState(null);
   const [viewingPrompt, setViewingPrompt] = useState(null);
   const [deletingPrompt, setDeletingPrompt] = useState(null);
@@ -29,11 +32,22 @@ function App() {
 
   const filtered = useMemo(() => {
     return prompts.filter(p => {
+      const matchesType = activeType === 'all' || getItemType(p) === activeType;
       const matchesCategory = activeCategory === 'Todos' || p.category === activeCategory;
       const matchesSearch = !search || p.title.toLowerCase().includes(search.toLowerCase()) || p.text.toLowerCase().includes(search.toLowerCase());
-      return matchesCategory && matchesSearch;
+      return matchesType && matchesCategory && matchesSearch;
     });
-  }, [prompts, activeCategory, search]);
+  }, [prompts, activeType, activeCategory, search]);
+
+  const openCreate = (type) => {
+    setFormType(type);
+    setCreateOpen(true);
+  };
+
+  const openEdit = (item) => {
+    setFormType(getItemType(item));
+    setEditingPrompt(item);
+  };
 
   const handleCreate = (data) => {
     const newPrompt = { ...data, id: Date.now().toString() };
@@ -63,12 +77,15 @@ function App() {
     if (activeCategory === name) setActiveCategory('Todos');
   };
 
+  const emptyLabel = activeType === 'all' ? 'elementos' : ITEM_TYPES[activeType].plural.toLowerCase();
+
   return (
     <div className="min-h-screen bg-warm-50 dark:bg-dark-900 text-warm-800 dark:text-dark-100 transition-colors">
-      <Header dark={dark} onToggleTheme={toggleTheme} onNewPrompt={() => setCreateOpen(true)} />
+      <Header dark={dark} onToggleTheme={toggleTheme} onNew={openCreate} />
 
       <div className="max-w-[1160px] mx-auto px-4 sm:px-10 pt-5 sm:pt-7 pb-[max(1.75rem,env(safe-area-inset-bottom))]">
         <SearchBar value={search} onChange={setSearch} />
+        <TypeFilter value={activeType} onChange={setActiveType} />
         <CategoryChips
           categories={categories}
           active={activeCategory}
@@ -77,11 +94,11 @@ function App() {
         />
 
         {prompts.length === 0 ? (
-          <EmptyState onNewPrompt={() => setCreateOpen(true)} />
+          <EmptyState onNew={openCreate} />
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-warm-400 dark:text-dark-400 text-[15px]">
-              No se encontraron prompts con esos filtros.
+              No se encontraron {emptyLabel} con esos filtros.
             </p>
           </div>
         ) : (
@@ -92,7 +109,7 @@ function App() {
                 prompt={p}
                 dark={dark}
                 onClick={() => setViewingPrompt(p)}
-                onEdit={() => setEditingPrompt(p)}
+                onEdit={() => openEdit(p)}
                 onDelete={() => setDeletingPrompt(p)}
               />
             ))}
@@ -101,13 +118,13 @@ function App() {
       </div>
 
       {/* Create modal */}
-      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Nuevo Prompt">
-        <PromptForm categories={categories} onSave={handleCreate} onCancel={() => setCreateOpen(false)} />
+      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title={ITEM_TYPES[formType].newTitle}>
+        <PromptForm categories={categories} type={formType} onTypeChange={setFormType} onSave={handleCreate} onCancel={() => setCreateOpen(false)} />
       </Modal>
 
       {/* Edit modal */}
-      <Modal open={!!editingPrompt} onClose={() => setEditingPrompt(null)} title="Editar Prompt">
-        <PromptForm categories={categories} initial={editingPrompt} onSave={handleEdit} onCancel={() => setEditingPrompt(null)} />
+      <Modal open={!!editingPrompt} onClose={() => setEditingPrompt(null)} title={ITEM_TYPES[formType].editTitle}>
+        <PromptForm categories={categories} initial={editingPrompt} type={formType} onTypeChange={setFormType} onSave={handleEdit} onCancel={() => setEditingPrompt(null)} />
       </Modal>
 
       {/* Detail view */}
@@ -115,13 +132,14 @@ function App() {
         prompt={viewingPrompt}
         dark={dark}
         onClose={() => setViewingPrompt(null)}
-        onEdit={() => { setEditingPrompt(viewingPrompt); setViewingPrompt(null); }}
+        onEdit={() => { openEdit(viewingPrompt); setViewingPrompt(null); }}
         onDelete={() => { setDeletingPrompt(viewingPrompt); }}
       />
 
       {/* Delete confirmation */}
       <DeleteConfirm
         open={!!deletingPrompt}
+        type={getItemType(deletingPrompt)}
         onClose={() => setDeletingPrompt(null)}
         onConfirm={handleDelete}
       />
