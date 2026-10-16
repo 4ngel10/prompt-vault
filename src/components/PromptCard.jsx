@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { DotsIcon, EditIcon, TrashIcon, ShareIcon, CopyIcon, CheckIcon } from './Icons';
-import { getItemType } from '../constants';
 import { usePreferences } from '../contexts/PreferencesContext';
 import TypeBadge from './TypeBadge';
 import SharedBadge from './SharedBadge';
@@ -10,7 +9,7 @@ const menuItemClass = 'w-full flex items-center gap-2 px-3.5 py-2.5 sm:py-2 text
 export default function PromptCard({ prompt, dark, onEdit, onDelete, onToggleShare, onClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { getColors } = usePreferences();
+  const { getColors, resolveType } = usePreferences();
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -81,7 +80,7 @@ export default function PromptCard({ prompt, dark, onEdit, onDelete, onToggleSha
         {prompt.text}
       </p>
       <div className="flex flex-wrap items-center gap-1.5">
-        <TypeBadge type={getItemType(prompt)} />
+        <TypeBadge type={resolveType(prompt)} />
         <span
           className="px-2.5 py-1 rounded-[10px] text-xs font-medium"
           style={{ background: scheme.bg, color: scheme.text }}

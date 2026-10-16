@@ -85,12 +85,56 @@ export function getCategoryColors(name, overrides) {
   return COLOR_PALETTE[getColorKey(name, overrides)];
 }
 
-export const ITEM_TYPES = {
-  prompt: { label: 'Prompt', plural: 'Prompts', demonstrative: 'este prompt', subject: 'El prompt será eliminado', newTitle: 'Nuevo Prompt', editTitle: 'Editar Prompt' },
-  skill:  { label: 'Skill',  plural: 'Skills',  demonstrative: 'esta skill',  subject: 'La skill será eliminada',  newTitle: 'Nueva Skill',  editTitle: 'Editar Skill' },
+// Tipos por defecto. Los usuarios pueden renombrarlos, reordenarlos, eliminarlos y crear otros
+export const DEFAULT_TYPES = [
+  { id: 'prompt', name: 'Prompt' },
+  { id: 'skill', name: 'Skill' },
+];
+
+// Tipo que se muestra para items compartidos cuyo tipo no existe en la lista del usuario
+export const UNKNOWN_TYPE = { id: '__unknown__', name: 'Otro', unknown: true };
+
+// Textos exactos de los tipos por defecto mientras conserven su nombre original
+const DEFAULT_TYPE_TEXTS = {
+  prompt: { gender: 'm', plural: 'Prompts', placeholder: 'Pega o escribe tu prompt aquí...' },
+  skill: { gender: 'f', plural: 'Skills', placeholder: 'Describe tu skill aquí...' },
 };
 
-// Los items guardados antes de existir el campo `type` se consideran prompts
-export function getItemType(item) {
-  return item?.type === 'skill' ? 'skill' : 'prompt';
+export function pluralize(word) {
+  const w = word.trim();
+  if (/[sx]$/i.test(w)) return w;
+  if (/[aeiouáéíóú]$/i.test(w)) return `${w}s`;
+  if (/z$/i.test(w)) return `${w.slice(0, -1)}ces`;
+  if (/ión$/i.test(w)) return `${w.slice(0, -3)}iones`;
+  // Grupos consonánticos finales (Skill, Prompt, Agent) suelen ser préstamos del inglés
+  if (/[^aeiouáéíóú]{2}$/i.test(w)) return `${w}s`;
+  return `${w}es`;
 }
+
+// Textos derivados del nombre de un tipo; el género se deduce del nombre (termina en -a → femenino)
+export function typeLabels(type) {
+  const preset = DEFAULT_TYPES.some(t => t.id === type.id && t.name === type.name) ? DEFAULT_TYPE_TEXTS[type.id] : null;
+  const name = type.name;
+  const lower = name.toLowerCase();
+  const f = (preset?.gender ?? (/a$/i.test(name.trim()) ? 'f' : 'm')) === 'f';
+  return {
+    name,
+    plural: preset?.plural ?? pluralize(name),
+    newTitle: `${f ? 'Nueva' : 'Nuevo'} ${name}`,
+    editTitle: `Editar ${name}`,
+    demonstrative: `${f ? 'esta' : 'este'} ${lower}`,
+    subject: `${f ? 'La' : 'El'} ${lower} será ${f ? 'eliminada' : 'eliminado'}`,
+    placeholder: preset?.placeholder ?? `Escribe aquí tu ${lower}...`,
+  };
+}
+
+// Color por defecto de un tipo creado por el usuario: estable a partir de su id
+export function getDefaultTypeColorKey(id) {
+  if (DEFAULT_TYPE_COLORS[id]) return DEFAULT_TYPE_COLORS[id];
+  let hash = 0;
+  for (const ch of id) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+  const keys = Object.keys(COLOR_PALETTE);
+  return keys[hash % keys.length];
+}
+
+export const NEUTRAL_COLORS = { ...UNCATEGORIZED_COLORS, rgb: '176,172,166' };

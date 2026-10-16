@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { getItemType } from '../constants';
 import { usePreferences } from '../contexts/PreferencesContext';
 import TypeBadge from './TypeBadge';
 import SharedBadge from './SharedBadge';
@@ -8,7 +7,7 @@ import Modal from './Modal';
 
 export default function PromptDetail({ prompt, dark, onClose, onEdit, onDelete }) {
   const [copied, setCopied] = useState(false);
-  const { getColors } = usePreferences();
+  const { getColors, resolveType } = usePreferences();
 
   if (!prompt) return null;
 
@@ -31,7 +30,7 @@ export default function PromptDetail({ prompt, dark, onClose, onEdit, onDelete }
             {prompt.title}
           </h2>
           <div className="flex flex-wrap items-center gap-1.5">
-            <TypeBadge type={getItemType(prompt)} />
+            <TypeBadge type={resolveType(prompt)} />
             <span
               className="px-2.5 py-1 rounded-[10px] text-xs font-medium"
               style={{ background: scheme.bg, color: scheme.text }}

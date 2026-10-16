@@ -67,5 +67,11 @@ export function useItems(user) {
     setItems(prev => prev.map(i => i.isOwn && i.category === from ? { ...i, category: to } : i));
   };
 
-  return { items, loading, error, dismissError: () => setError(null), createItem, updateItem, deleteItem, toggleShare, clearCategory, renameCategory };
+  // Al eliminar un tipo, sus items propios pasan a otro tipo
+  const reassignType = async (from, to) => {
+    await run(supabase.from('items').update({ type: to }).eq('user_id', user.id).eq('type', from));
+    setItems(prev => prev.map(i => i.isOwn && i.type === from ? { ...i, type: to } : i));
+  };
+
+  return { items, loading, error, dismissError: () => setError(null), createItem, updateItem, deleteItem, toggleShare, clearCategory, renameCategory, reassignType };
 }

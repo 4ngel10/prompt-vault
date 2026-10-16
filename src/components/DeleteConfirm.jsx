@@ -1,9 +1,10 @@
 import { TrashIcon } from './Icons';
 import Modal from './Modal';
-import { ITEM_TYPES } from '../constants';
+import { typeLabels } from '../constants';
 
-export default function DeleteConfirm({ open, type = 'prompt', onClose, onConfirm }) {
-  const labels = ITEM_TYPES[type];
+// `type` es el tipo resuelto del item que se va a eliminar
+export default function DeleteConfirm({ open, type, onClose, onConfirm }) {
+  const labels = typeLabels(type);
   return (
     <Modal open={open} onClose={onClose} title="" width="max-w-sm">
       <div className="-mt-6 text-center sm:pt-0 pt-2">

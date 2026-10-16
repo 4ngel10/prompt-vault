@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useTheme } from './hooks/useTheme';
 import { useItems } from './hooks/useItems';
 import { useAuth } from './contexts/AuthContext';
-import { ITEM_TYPES, getItemType } from './constants';
+import { typeLabels } from './constants';
 import AuthScreen from './components/AuthScreen';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
@@ -14,7 +14,8 @@ import Modal from './components/Modal';
 import PromptForm from './components/PromptForm';
 import PromptDetail from './components/PromptDetail';
 import DeleteConfirm from './components/DeleteConfirm';
-import CustomizeModal from './components/CustomizeModal';
+import ListEditorModal from './components/ListEditorModal';
+import TypeBadge from './components/TypeBadge';
 import { PreferencesProvider, usePreferences } from './contexts/PreferencesContext';
 import { CloseIcon } from './components/Icons';
 
@@ -32,8 +33,9 @@ function App() {
 
 function Vault({ user, dark, toggleTheme }) {
   const { signOut } = useAuth();
-  const { items: prompts, loading, error, dismissError, createItem, updateItem, deleteItem, toggleShare, clearCategory, renameCategory } = useItems(user);
-  const { categories, renameCategory: renameInPrefs, deleteCategory: deleteInPrefs } = usePreferences();
+  const { items: prompts, loading, error, dismissError, createItem, updateItem, deleteItem, toggleShare, clearCategory, renameCategory, reassignType } = useItems(user);
+  const prefs = usePreferences();
+  const { categories, types, resolveType } = prefs;
   const [search, setSearch] = useState('');
   const [activeType, setActiveType] = useState('all');
   const [activeCategory, setActiveCategory] = useState('Todos');
@@ -44,23 +46,34 @@ function Vault({ user, dark, toggleTheme }) {
   const [editingPrompt, setEditingPrompt] = useState(null);
   const [viewingPrompt, setViewingPrompt] = useState(null);
   const [deletingPrompt, setDeletingPrompt] = useState(null);
-  const [customizing, setCustomizing] = useState(false);
+  const [editingCategories, setEditingCategories] = useState(false);
+  const [editingTypes, setEditingTypes] = useState(false);
 
-  // Nº de items propios por categoría, para el editor de categorías
-  const categoryCounts = useMemo(() => {
-    const counts = {};
-    for (const p of prompts) if (p.isOwn && p.category) counts[p.category] = (counts[p.category] ?? 0) + 1;
-    return counts;
-  }, [prompts]);
+  // Nº de items propios por categoría y por tipo, para los editores
+  const [categoryCounts, typeCounts] = useMemo(() => {
+    const byCategory = {};
+    const byType = {};
+    for (const p of prompts) {
+      if (!p.isOwn) continue;
+      if (p.category) byCategory[p.category] = (byCategory[p.category] ?? 0) + 1;
+      const id = resolveType(p).id;
+      byType[id] = (byType[id] ?? 0) + 1;
+    }
+    return [byCategory, byType];
+  }, [prompts, resolveType]);
+
+  // Si el tipo del filtro desaparece (eliminado), se vuelve a "Todos"
+  const currentType = activeType === 'all' || types.some(t => t.id === activeType) ? activeType : 'all';
+  const formTypeObj = types.find(t => t.id === formType) ?? types[0];
 
   const filtered = useMemo(() => {
     return prompts.filter(p => {
-      const matchesType = activeType === 'all' || getItemType(p) === activeType;
+      const matchesType = currentType === 'all' || resolveType(p).id === currentType;
       const matchesCategory = activeCategory === 'Todos' || p.category === activeCategory;
       const matchesSearch = !search || p.title.toLowerCase().includes(search.toLowerCase()) || p.text.toLowerCase().includes(search.toLowerCase());
       return matchesType && matchesCategory && matchesSearch;
     });
-  }, [prompts, activeType, activeCategory, search]);
+  }, [prompts, currentType, resolveType, activeCategory, search]);
 
   const goHome = () => {
     setSearch('');
@@ -74,7 +87,8 @@ function Vault({ user, dark, toggleTheme }) {
   };
 
   const openEdit = (item) => {
-    setFormType(getItemType(item));
+    const type = resolveType(item);
+    setFormType(type.unknown ? types[0].id : type.id);
     setEditingPrompt(item);
   };
 
@@ -109,21 +123,28 @@ function Vault({ user, dark, toggleTheme }) {
   // Renombrar y eliminar tocan los items en Supabase y las preferencias; si falla, el modal lo muestra
   const handleRenameCategory = async (from, to) => {
     await renameCategory(from, to);
-    renameInPrefs(from, to);
+    prefs.renameCategory(from, to);
     if (activeCategory === from) setActiveCategory(to);
   };
 
   const handleDeleteCategory = async (name) => {
     await clearCategory(name);
-    deleteInPrefs(name);
+    prefs.deleteCategory(name);
     if (activeCategory === name) setActiveCategory('Todos');
+  };
+
+  // Al eliminar un tipo, sus items pasan al primer tipo que quede
+  const fallbackTypeFor = (id) => types.find(t => t.id !== id);
+  const handleDeleteType = async (id) => {
+    await reassignType(id, fallbackTypeFor(id).id);
+    prefs.deleteType(id);
   };
 
   const handleSignOut = async () => {
     try { await signOut(); } catch { /* la sesión local se limpia igualmente */ }
   };
 
-  const emptyLabel = activeType === 'all' ? 'elementos' : ITEM_TYPES[activeType].plural.toLowerCase();
+  const emptyLabel = currentType === 'all' ? 'elementos' : typeLabels(types.find(t => t.id === currentType)).plural.toLowerCase();
 
   return (
     <div className="min-h-screen bg-warm-50 dark:bg-dark-900 text-warm-800 dark:text-dark-100 transition-colors">
@@ -132,20 +153,19 @@ function Vault({ user, dark, toggleTheme }) {
         onToggleTheme={toggleTheme}
         onNew={openCreate}
         onHome={goHome}
-        onOpenSettings={() => setCustomizing(true)}
         user={user}
         onSignOut={handleSignOut}
       />
 
       <div className="max-w-[1160px] mx-auto px-4 sm:px-10 pt-5 sm:pt-7 pb-[max(1.75rem,env(safe-area-inset-bottom))]">
         <SearchBar value={search} onChange={setSearch} />
-        <TypeFilter value={activeType} onChange={setActiveType} />
+        <TypeFilter value={currentType} onChange={setActiveType} onManage={() => setEditingTypes(true)} />
         <CategoryChips
           categories={categories}
           active={activeCategory}
           dark={dark}
           onSelect={setActiveCategory}
-          onManage={() => setCustomizing(true)}
+          onManage={() => setEditingCategories(true)}
         />
 
         {loading ? (
@@ -189,13 +209,13 @@ function Vault({ user, dark, toggleTheme }) {
       )}
 
       {/* Create modal */}
-      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title={ITEM_TYPES[formType].newTitle}>
-        <PromptForm categories={categories} dark={dark} type={formType} onTypeChange={setFormType} onSave={handleCreate} onCancel={() => setCreateOpen(false)} />
+      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title={typeLabels(formTypeObj).newTitle}>
+        <PromptForm categories={categories} dark={dark} type={formTypeObj.id} onTypeChange={setFormType} onSave={handleCreate} onCancel={() => setCreateOpen(false)} />
       </Modal>
 
       {/* Edit modal */}
-      <Modal open={!!editingPrompt} onClose={() => setEditingPrompt(null)} title={ITEM_TYPES[formType].editTitle}>
-        <PromptForm categories={categories} dark={dark} initial={editingPrompt} type={formType} onTypeChange={setFormType} onSave={handleEdit} onCancel={() => setEditingPrompt(null)} />
+      <Modal open={!!editingPrompt} onClose={() => setEditingPrompt(null)} title={typeLabels(formTypeObj).editTitle}>
+        <PromptForm categories={categories} dark={dark} initial={editingPrompt} type={formTypeObj.id} onTypeChange={setFormType} onSave={handleEdit} onCancel={() => setEditingPrompt(null)} />
       </Modal>
 
       {/* Detail view */}
@@ -210,19 +230,65 @@ function Vault({ user, dark, toggleTheme }) {
       {/* Delete confirmation */}
       <DeleteConfirm
         open={!!deletingPrompt}
-        type={getItemType(deletingPrompt)}
+        type={deletingPrompt ? resolveType(deletingPrompt) : types[0]}
         onClose={() => setDeletingPrompt(null)}
         onConfirm={handleDelete}
       />
 
-      {/* Categories, order and colors */}
-      <CustomizeModal
-        open={customizing}
-        onClose={() => setCustomizing(false)}
+      {/* Category editor: add, rename, delete, reorder and color */}
+      <ListEditorModal
+        open={editingCategories}
+        onClose={() => setEditingCategories(false)}
+        title="Editar categorías"
+        description="Arrastra para cambiar el orden. El color se usa en los filtros, las tarjetas y el formulario."
         dark={dark}
+        entries={categories.map(c => ({ id: c, label: c }))}
         counts={categoryCounts}
+        renderPreview={({ label }) => {
+          const scheme = dark ? prefs.getColors(label).dark : prefs.getColors(label).light;
+          return (
+            <span className="min-w-0 truncate px-2.5 py-1 rounded-[10px] text-xs font-medium" style={{ background: scheme.bg, color: scheme.text }}>
+              {label}
+            </span>
+          );
+        }}
+        colorKey={prefs.getKey}
+        onPickColor={prefs.setCategoryColor}
+        onAdd={prefs.addCategory}
         onRename={handleRenameCategory}
         onDelete={handleDeleteCategory}
+        onReorder={prefs.reorderCategories}
+        deleteNotice={(_, n) => `${n} elemento${n > 1 ? 's quedarán' : ' quedará'} sin categoría.`}
+        addPlaceholder="Nueva categoría..."
+        emptyText="No hay categorías."
+        canReset={prefs.hasCustomCategoryColors}
+        onReset={prefs.resetCategoryColors}
+        error={prefs.error}
+      />
+
+      {/* Type editor: same options; at least one type must remain */}
+      <ListEditorModal
+        open={editingTypes}
+        onClose={() => setEditingTypes(false)}
+        title="Editar tipos"
+        description="Arrastra para cambiar el orden. El color se usa en los filtros, las badges y el formulario."
+        dark={dark}
+        entries={types.map(t => ({ id: t.id, label: t.name }))}
+        counts={typeCounts}
+        renderPreview={({ id }) => <TypeBadge type={types.find(t => t.id === id)} />}
+        colorKey={prefs.getTypeKey}
+        onPickColor={prefs.setTypeColor}
+        onAdd={prefs.addType}
+        onRename={prefs.renameType}
+        onDelete={handleDeleteType}
+        onReorder={prefs.reorderTypes}
+        deleteNotice={({ id }, n) => `${n} elemento${n > 1 ? 's pasarán' : ' pasará'} a «${fallbackTypeFor(id)?.name}».`}
+        minEntries={1}
+        addPlaceholder="Nuevo tipo..."
+        emptyText="No hay tipos."
+        canReset={prefs.hasCustomTypeColors}
+        onReset={prefs.resetTypeColors}
+        error={prefs.error}
       />
     </div>
   );

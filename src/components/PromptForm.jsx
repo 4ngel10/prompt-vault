@@ -1,13 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ChevronDownIcon, BoltIcon } from './Icons';
-import { ITEM_TYPES } from '../constants';
+import { typeLabels } from '../constants';
 import { usePreferences } from '../contexts/PreferencesContext';
 import SegmentedControl from './SegmentedControl';
-
-const TEXT_PLACEHOLDERS = {
-  prompt: 'Pega o escribe tu prompt aquí...',
-  skill: 'Describe tu skill aquí...',
-};
 
 // Las opciones del desplegable mantienen colores neutros aunque el select esté tintado
 const OPTION_CLASS = 'bg-white text-warm-800 dark:bg-dark-700 dark:text-dark-100';
@@ -16,11 +11,14 @@ export default function PromptForm({ categories, initial, type, dark, onTypeChan
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [text, setText] = useState('');
-  const { getColors, getTypeColors } = usePreferences();
-  const typeOptions = [
-    { value: 'prompt', label: 'Prompt', activeColor: getTypeColors('prompt').swatch },
-    { value: 'skill', label: 'Skill', icon: <BoltIcon />, activeColor: getTypeColors('skill').swatch },
-  ];
+  const { getColors, getTypeColors, types } = usePreferences();
+  const typeOptions = types.map(t => ({
+    value: t.id,
+    label: t.name,
+    icon: t.id === 'skill' ? <BoltIcon /> : null,
+    activeColor: getTypeColors(t.id).swatch,
+  }));
+  const labels = typeLabels(types.find(t => t.id === type) ?? types[0]);
   const categoryColors = category ? getColors(category) : null;
   const scheme = categoryColors ? (dark ? categoryColors.dark : categoryColors.light) : null;
 
@@ -101,10 +99,10 @@ export default function PromptForm({ categories, initial, type, dark, onTypeChan
       </div>
       <div>
         <label className="block text-[13px] font-semibold text-warm-600 dark:text-dark-300 mb-1.5">
-          {ITEM_TYPES[type].label}
+          {labels.name}
         </label>
         <textarea
-          placeholder={TEXT_PLACEHOLDERS[type]}
+          placeholder={labels.placeholder}
           value={text}
           onChange={e => setText(e.target.value)}
           rows={7}

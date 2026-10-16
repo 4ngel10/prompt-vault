@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { LockIcon, SunIcon, MoonIcon, PlusIcon, ChevronDownIcon, BoltIcon, LogoutIcon, GoogleIcon, GearIcon } from './Icons';
-import { softVars } from '../constants';
+import { LockIcon, SunIcon, MoonIcon, PlusIcon, ChevronDownIcon, BoltIcon, LogoutIcon, GoogleIcon } from './Icons';
+import { softVars, typeLabels } from '../constants';
 import { usePreferences } from '../contexts/PreferencesContext';
 
 // Cierra un menú al hacer clic fuera o pulsar Escape
@@ -50,10 +50,10 @@ const TYPE_ICON_CLASS = 'w-5 h-5 rounded-md flex items-center justify-center bg-
 const menuPanelClass = 'absolute right-0 top-[46px] bg-white dark:bg-dark-700 border border-warm-200 dark:border-dark-500 rounded-xl shadow-lg py-1.5 z-30 animate-in';
 const menuItemClass = 'w-full flex items-center gap-2.5 px-3.5 py-2.5 sm:py-2 text-[13px] text-warm-600 dark:text-dark-200 hover:bg-warm-50 dark:hover:bg-dark-600 transition-colors cursor-pointer';
 
-export default function Header({ dark, onToggleTheme, onNew, onHome, onOpenSettings, user, onSignOut }) {
+export default function Header({ dark, onToggleTheme, onNew, onHome, user, onSignOut }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
-  const { getTypeColors } = usePreferences();
+  const { getTypeColors, types } = usePreferences();
   const menuRef = useRef(null);
   const accountRef = useRef(null);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
@@ -92,15 +92,6 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, onOpenSetti
         >
           {dark ? <MoonIcon /> : <SunIcon />}
         </button>
-        <button
-          onClick={onOpenSettings}
-          title="Personalizar categorías y colores"
-          className="hidden sm:flex w-[38px] h-[38px] rounded-[10px] border border-warm-200 dark:border-dark-500 bg-warm-50 dark:bg-dark-700 items-center justify-center text-warm-600 dark:text-dark-200 hover:bg-warm-100 dark:hover:bg-dark-600 transition-colors cursor-pointer"
-          aria-label="Personalizar categorías y colores"
-        >
-          <GearIcon />
-        </button>
-
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setMenuOpen(o => !o)}
@@ -114,18 +105,14 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, onOpenSetti
           </button>
           {menuOpen && (
             <div role="menu" className={`${menuPanelClass} min-w-[170px]`}>
-              <button role="menuitem" onClick={() => choose('prompt')} className={menuItemClass}>
-                <span style={softVars(getTypeColors('prompt'))} className={TYPE_ICON_CLASS}>
-                  <PlusIcon className="w-3 h-3" />
-                </span>
-                Nuevo Prompt
-              </button>
-              <button role="menuitem" onClick={() => choose('skill')} className={menuItemClass}>
-                <span style={softVars(getTypeColors('skill'))} className={TYPE_ICON_CLASS}>
-                  <BoltIcon />
-                </span>
-                Nueva Skill
-              </button>
+              {types.map(t => (
+                <button key={t.id} role="menuitem" onClick={() => choose(t.id)} className={menuItemClass}>
+                  <span style={softVars(getTypeColors(t.id))} className={TYPE_ICON_CLASS}>
+                    {t.id === 'skill' ? <BoltIcon /> : <PlusIcon className="w-3 h-3" />}
+                  </span>
+                  <span className="truncate">{typeLabels(t).newTitle}</span>
+                </button>
+              ))}
             </div>
           )}
         </div>
@@ -152,14 +139,6 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, onOpenSetti
                 </span>
               </div>
               <div className="border-t border-warm-200 dark:border-dark-500 my-1" />
-              <button
-                role="menuitem"
-                onClick={() => { setAccountOpen(false); onOpenSettings(); }}
-                className={menuItemClass}
-              >
-                <GearIcon className="w-[15px] h-[15px]" />
-                Personalizar
-              </button>
               <button
                 role="menuitem"
                 onClick={() => { setAccountOpen(false); onSignOut(); }}

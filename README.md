@@ -7,10 +7,9 @@ Aplicación web personal para guardar, organizar y gestionar prompts y skills de
 ## Features
 
 - Autenticación con Google y con email + contraseña
-- Prompts y skills como tipos distintos, con filtro por tipo (Todos / Prompts / Skills)
+- Tipos de item personalizables (por defecto Prompt y Skill): crear, renombrar, eliminar, reordenar y elegir su color, con filtro por tipo
 - Búsqueda por título y contenido
 - Categorías personalizables: crear, renombrar, eliminar, reordenar (arrastrar y soltar) y elegir su color
-- Colores personalizables para los tipos Prompt y Skill
 - Compartir items con otros usuarios (solo lectura para ellos)
 - Copiar al portapapeles en un clic
 - Modo oscuro
@@ -46,6 +45,7 @@ Ejecuta en el SQL Editor de Supabase, en este orden:
 1. [`supabase/schema.sql`](supabase/schema.sql): tabla `items` con sus políticas RLS.
 2. [`supabase/user_preferences.sql`](supabase/user_preferences.sql): tabla `user_preferences` (colores).
 3. [`supabase/user_preferences_v2.sql`](supabase/user_preferences_v2.sql): orden de categorías y colores de los tipos.
+4. [`supabase/types_v3.sql`](supabase/types_v3.sql): tipos personalizables.
 
 En Supabase → Authentication → URL Configuration, añade como Redirect URLs la URL de producción y `http://localhost:5173`.
 
