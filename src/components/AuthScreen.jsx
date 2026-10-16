@@ -4,7 +4,7 @@ import { LockIcon, SunIcon, MoonIcon, GoogleIcon } from './Icons';
 
 const ERROR_MESSAGES = {
   'Invalid login credentials': 'Email o contraseña incorrectos.',
-  'User already registered': 'Ya existe una cuenta con ese email.',
+  'User already registered': 'Ya existe una cuenta con ese email. Inicia sesión con tu contraseña o con Google.',
   'Email not confirmed': 'Confirma tu email antes de iniciar sesión. Revisa tu bandeja de entrada.',
   'Unsupported provider: provider is not enabled': 'El inicio de sesión con Google aún no está habilitado.',
 };

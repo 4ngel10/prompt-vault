@@ -35,6 +35,10 @@ export function AuthProvider({ children }) {
       options: { emailRedirectTo: redirectTo() },
     });
     if (error) throw error;
+    // Email ya registrado: Supabase responde OK sin enviar correo y con identities vacío
+    if (data.user && data.user.identities?.length === 0) {
+      throw new Error('User already registered');
+    }
     return !data.session;
   };
 

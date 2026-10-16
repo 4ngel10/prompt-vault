@@ -122,7 +122,7 @@ function Vault({ user, dark, toggleTheme }) {
         onToggleTheme={toggleTheme}
         onNew={openCreate}
         onHome={goHome}
-        userEmail={user.email}
+        user={user}
         onSignOut={handleSignOut}
       />
 
