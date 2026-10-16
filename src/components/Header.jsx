@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { LockIcon, SunIcon, MoonIcon, PlusIcon, ChevronDownIcon, BoltIcon, LogoutIcon, GoogleIcon } from './Icons';
 
 // Cierra un menú al hacer clic fuera o pulsar Escape
@@ -52,8 +52,8 @@ export default function Header({ dark, onToggleTheme, onNew, onHome, user, onSig
   const [accountOpen, setAccountOpen] = useState(false);
   const menuRef = useRef(null);
   const accountRef = useRef(null);
-  const closeMenu = useRef(() => setMenuOpen(false)).current;
-  const closeAccount = useRef(() => setAccountOpen(false)).current;
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const closeAccount = useCallback(() => setAccountOpen(false), []);
 
   useDismiss(menuRef, menuOpen, closeMenu);
   useDismiss(accountRef, accountOpen, closeAccount);
